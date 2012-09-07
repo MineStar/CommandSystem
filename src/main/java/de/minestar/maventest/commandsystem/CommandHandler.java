@@ -47,7 +47,11 @@ public class CommandHandler {
                 System.arraycopy(arguments, 1, newArguments, 0, newArguments.length);
                 command.handleCommand(label, newArguments);
             } else {
-                command.printSyntax();
+                if (command.isExecuteSuperCommand()) {
+                    command.handleCommand(label, arguments);
+                } else {
+                    command.printSyntax();
+                }
             }
             return true;
         } else {

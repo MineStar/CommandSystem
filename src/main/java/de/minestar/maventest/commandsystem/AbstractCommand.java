@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import de.minestar.maventest.annotations.Arguments;
 import de.minestar.maventest.annotations.Description;
+import de.minestar.maventest.annotations.Execution;
 import de.minestar.maventest.annotations.Label;
 import de.minestar.maventest.annotations.PermissionNode;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
@@ -21,6 +22,7 @@ public class AbstractCommand {
     private int maxArgumentCount = 0;
     private final String commandLabel;
     private String syntax, permissionNode, description;
+    private boolean executeSuperCommand = false;
 
     public HashMap<String, AbstractCommand> inheritedCommands;
 
@@ -42,6 +44,7 @@ public class AbstractCommand {
         Arguments syntaxAnnotation = this.getClass().getAnnotation(Arguments.class);
         PermissionNode nodeAnnotation = this.getClass().getAnnotation(PermissionNode.class);
         Description descriptionAnnotation = this.getClass().getAnnotation(Description.class);
+        Execution executeAnnotation = this.getClass().getAnnotation(Execution.class);
 
         if (labelAnnotation == null) {
             this.commandLabel = "";
@@ -70,11 +73,25 @@ public class AbstractCommand {
         } else {
             this.description = descriptionAnnotation.description();
         }
+
+        if (executeAnnotation == null) {
+            this.executeSuperCommand = false;
+        } else {
+            this.executeSuperCommand = executeAnnotation.executeSuperCommand();
+        }
+
         this.countArguments();
 
         this.inheritedCommands = new HashMap<String, AbstractCommand>();
-
     }
+    public boolean isExecuteSuperCommand() {
+        return executeSuperCommand;
+    }
+
+    public void executeSuperCommand() {
+        this.executeSuperCommand = true;
+    }
+
     private void countArguments() {
         char key;
         for (int i = 0; i < this.syntax.length(); ++i) {
@@ -180,8 +197,12 @@ public class AbstractCommand {
     }
 
     public void printSyntax() {
-        ConsoleUtils.printError(this.pluginName, "Wrong syntax!");
-        ConsoleUtils.printInfo(this.getCompleteCommand() + " " + this.syntax);
+        if (!this.isSuperCommand()) {
+            ConsoleUtils.printError(this.pluginName, "Wrong syntax!");
+            ConsoleUtils.printInfo(this.getCompleteCommand() + " " + this.syntax);
+        } else {
+            this.listCommands();
+        }
     }
 
     public void listCommands() {
@@ -193,13 +214,22 @@ public class AbstractCommand {
             ConsoleUtils.printInfo("-> " + '\t' + subCommand.getCommandLabel() + " " + subCommand.getSyntax() + '\t' + "-> Description: " + subCommand.getDescription() + '\t' + "-> " + subCommand.getPermissionNode());
         }
     }
+
     public boolean handleCommand(String label, String[] arguments) {
         label = label.toLowerCase();
 
         AbstractCommand command = this.inheritedCommands.get(label);
         if (command == null) {
-            ConsoleUtils.printError(pluginName, "Command '" + this.commandLabel + " " + label + "' not found.");
-            return false;
+            if (this.isExecuteSuperCommand()) {
+                String[] newArguments = new String[arguments.length + 1];
+                newArguments[0] = label;
+                System.arraycopy(arguments, 0, newArguments, 1, newArguments.length - 1);
+                this.execute(newArguments);
+                return true;
+            } else {
+                ConsoleUtils.printError(pluginName, "Command '" + this.commandLabel + " " + label + "' not found.");
+                return false;
+            }
         }
 
         if (command.isSuperCommand()) {
@@ -210,7 +240,11 @@ public class AbstractCommand {
                 System.arraycopy(arguments, 1, newArguments, 0, newArguments.length);
                 command.handleCommand(label, newArguments);
             } else {
-                command.printSyntax();
+                if (command.isExecuteSuperCommand()) {
+                    command.handleCommand(label, arguments);
+                } else {
+                    command.printSyntax();
+                }
             }
             return true;
         } else {

@@ -6,11 +6,11 @@ import de.minestar.maventest.annotations.PermissionNode;
 import de.minestar.maventest.annotations.Arguments;
 import de.minestar.maventest.commandsystem.AbstractCommand;
 
-@Label(label = "rollback")
-@Arguments(arguments = "<MUSTHAVE> <MUSTHAVE2> [OPTIONAL]")
+@Label(label = "create")
+@Arguments(arguments = "<Warpname>")
 @PermissionNode(node = "test.node")
 @Description(description = "This is a subcommand. It is a subcommand of '/tr' command with 2 needed parameters and 1 optional. The permissionnode is 'test.node'")
-public class SubCommandExample extends AbstractCommand {
+public class WarpCreateCommandExample extends AbstractCommand {
 
     @Override
     public void execute(String[] arguments) {
@@ -18,6 +18,6 @@ public class SubCommandExample extends AbstractCommand {
         for (String t : arguments) {
             args += t + " ";
         }
-        System.out.println("execute /tr rollback " + args);
+        System.out.println("execute /warp create " + args);
     }
 }
