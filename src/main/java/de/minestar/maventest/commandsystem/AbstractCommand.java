@@ -22,7 +22,7 @@ import de.minestar.minestarlibrary.utils.PlayerUtils;
 public abstract class AbstractCommand {
 
     // String for no permissions
-    public final static String NO_PERMISSION = "You are not allowed to use this command!";
+    public final static String NO_PERMISSION = "You are not allowed to use this command ever!";
 
     // the pluginName (for easier use with ConsoleUtils/PlayerUtils)
     private String pluginName;
