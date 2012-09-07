@@ -113,6 +113,16 @@ public abstract class AbstractCommand {
     }
 
     /**
+     * Check if the argumentcount was correct for this command
+     * 
+     * @param arguments
+     * @return <b>true</b> if it is correct, otherwise <b>false</b>
+     */
+    public boolean isSyntaxCorrect(String[] arguments) {
+        return (!this.hasOptionalArguments() && arguments.length == this.getMinimumArgumentCount()) || (this.hasOptionalArguments() && arguments.length >= this.getMinimumArgumentCount() && arguments.length <= this.getMaximumArgumentCount());
+    }
+
+    /**
      * Execute the command. This will also check the permissions for players.
      * 
      * @param sender
@@ -432,7 +442,7 @@ public abstract class AbstractCommand {
                 System.arraycopy(arguments, 0, newArguments, 1, newArguments.length - 1);
 
                 // check argumentcount & try to execute it
-                if ((!this.hasOptionalArguments() && newArguments.length == this.getMinimumArgumentCount()) || (this.hasOptionalArguments() && newArguments.length >= this.getMinimumArgumentCount() && newArguments.length <= this.getMaximumArgumentCount())) {
+                if (this.isSyntaxCorrect(newArguments)) {
                     // (2.1)
 
                     // execute the command
@@ -492,7 +502,7 @@ public abstract class AbstractCommand {
             // check the argumentcount to see if the passed argumentcount is correct for this command. Execute the command if it is true (2.1) , otherwise print the syntax (2.2).
 
             // check argumentcount & try to execute it
-            if ((!command.hasOptionalArguments() && arguments.length == command.getMinimumArgumentCount()) || (command.hasOptionalArguments() && arguments.length >= command.getMinimumArgumentCount() && arguments.length <= command.getMaximumArgumentCount())) {
+            if (command.isSyntaxCorrect(arguments)) {
                 // (2.1)
 
                 // execute the command

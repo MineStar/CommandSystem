@@ -106,7 +106,7 @@ public class CommandHandler {
                     // check the argumentcount to see if the passed argumentcount is correct for this command. Execute the command if it is true (2.1) , otherwise print the syntax (2.2).
 
                     // check argumentcount & try to execute it
-                    if ((!command.hasOptionalArguments() && arguments.length == command.getMinimumArgumentCount()) || (command.hasOptionalArguments() && arguments.length >= command.getMinimumArgumentCount() && arguments.length <= command.getMaximumArgumentCount())) {
+                    if (command.isSyntaxCorrect(arguments)) {
                         // (2.1)
 
                         // execute the command
@@ -131,7 +131,7 @@ public class CommandHandler {
             // check the argumentcount to see if the passed argumentcount is correct for this command. Execute the command if it is true (2.1) , otherwise print the syntax (2.2).
 
             // check argumentcount & try to execute it
-            if ((!command.hasOptionalArguments() && arguments.length == command.getMinimumArgumentCount()) || (command.hasOptionalArguments() && arguments.length >= command.getMinimumArgumentCount() && arguments.length <= command.getMaximumArgumentCount())) {
+            if (command.isSyntaxCorrect(arguments)) {
                 // (2.1)
 
                 // execute the command
