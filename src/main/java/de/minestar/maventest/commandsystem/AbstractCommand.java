@@ -110,7 +110,7 @@ public abstract class AbstractCommand {
      * @param player
      * @return True, if the sender has enough permission to use the command Or the permissionnode is empty, so everybody can use it
      */
-    protected final boolean hasPermission(Player player) {
+    private final boolean hasPermission(Player player) {
         return permissionNode.length() == 0 || UtilPermissions.playerCanUseCommand(player, this.getPermissionNode());
     }
 
