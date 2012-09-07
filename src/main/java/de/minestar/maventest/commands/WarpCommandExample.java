@@ -25,6 +25,6 @@ public class WarpCommandExample extends AbstractCommand {
         for (String t : arguments) {
             args += t + " ";
         }
-        System.out.println("execute /warp " + args);
+        System.out.println("DONE: /warp " + args);
     }
 }
