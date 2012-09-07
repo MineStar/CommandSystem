@@ -11,7 +11,7 @@ import de.minestar.maventest.commandsystem.CommandHandler;
 
 public class MavenTestCore extends JavaPlugin {
 
-    public static final String NAME = "CommandSystemGefälltMirBesser";
+    public static final String NAME = "CommandSystem";
     private CommandHandler commandHandler;
 
     public MavenTestCore() {
