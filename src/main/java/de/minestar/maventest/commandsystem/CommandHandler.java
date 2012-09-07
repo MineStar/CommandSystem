@@ -2,7 +2,10 @@ package de.minestar.maventest.commandsystem;
 
 import java.util.HashMap;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+
+import com.bukkit.gemo.utils.ChatUtils;
 
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
 
@@ -40,7 +43,6 @@ public class CommandHandler {
 
         // register the command
         this.registeredCommands.put(command.getLabel(), command);
-        ConsoleUtils.printInfo(pluginName, "OK --> Registered command '" + command.getLabel() + "'!");
 
         // initialize the subcommands for the given command
         command.initializeSubCommands();
@@ -66,7 +68,7 @@ public class CommandHandler {
             argText += " " + arg;
         }
 
-        System.out.println('\n' + "Executing: " + label + argText);
+        ChatUtils.printLine(sender, ChatColor.GRAY, "Executing: " + label + argText);
 
         // DEBUGCODE
         // //////////////////////////////////////
@@ -115,13 +117,13 @@ public class CommandHandler {
                         // (2.2)
 
                         // print the syntax
-                        command.printSyntax();
+                        command.printWrongSyntax(sender);
                     }
                 } else {
                     // (1.2.2)
 
                     // print the syntax
-                    command.printSyntax();
+                    command.listCommand(sender);
                 }
             }
             return true;
@@ -140,7 +142,7 @@ public class CommandHandler {
                 // (2.2)
 
                 // print the syntax
-                command.printSyntax();
+                command.printWrongSyntax(sender);
             }
             return true;
         }
@@ -149,15 +151,9 @@ public class CommandHandler {
     /**
      * List all registered commands for this CommandHandler
      */
-    public void listCommands() {
-        // TODO: Update this method for the use with Bukkit
-
-        ConsoleUtils.printInfo("");
-        ConsoleUtils.printInfo("------------------------------------------");
-        ConsoleUtils.printInfo("List of registered commands:");
-        ConsoleUtils.printInfo("------------------------------------------");
+    public void listCommands(CommandSender sender) {
         for (AbstractCommand command : this.registeredCommands.values()) {
-            command.listCommand();
+            command.listCommand(sender);
         }
     }
 }

@@ -3,10 +3,12 @@ package de.minestar.maventest.commandsystem;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
+import com.bukkit.gemo.utils.ChatUtils;
 import com.bukkit.gemo.utils.UtilPermissions;
 
 import de.minestar.maventest.annotations.Arguments;
@@ -108,7 +110,7 @@ public abstract class AbstractCommand {
      * @param player
      * @return True, if the sender has enough permission to use the command Or the permissionnode is empty, so everybody can use it
      */
-    protected boolean hasPermission(Player player) {
+    protected final boolean hasPermission(Player player) {
         return permissionNode.length() == 0 || UtilPermissions.playerCanUseCommand(player, this.getPermissionNode());
     }
 
@@ -118,7 +120,7 @@ public abstract class AbstractCommand {
      * @param arguments
      * @return <b>true</b> if it is correct, otherwise <b>false</b>
      */
-    public boolean isSyntaxCorrect(String[] arguments) {
+    public final boolean isSyntaxCorrect(String[] arguments) {
         return (!this.hasOptionalArguments() && arguments.length == this.getMinimumArgumentCount()) || (this.hasOptionalArguments() && arguments.length >= this.getMinimumArgumentCount() && arguments.length <= this.getMaximumArgumentCount());
     }
 
@@ -128,7 +130,7 @@ public abstract class AbstractCommand {
      * @param sender
      * @param arguments
      */
-    public void run(CommandSender sender, String[] arguments) {
+    public final void run(CommandSender sender, String[] arguments) {
         if (sender instanceof Player) {
             // get the player
             Player player = (Player) sender;
@@ -176,7 +178,7 @@ public abstract class AbstractCommand {
     /**
      * This method will initialize the subcommands for this command. This method is automatically called.
      */
-    public void initializeSubCommands() {
+    public final void initializeSubCommands() {
         this.createSubCommands();
         if (this.subCommands != null) {
             this.superCommand = (this.subCommands.size() > 0);
@@ -188,7 +190,7 @@ public abstract class AbstractCommand {
     /**
      * Method to count the arguments for the commands syntax.
      */
-    private void countArguments() {
+    private final void countArguments() {
         if (this.minimumArgumentCount != -1 && this.maximumArgumentCount != -1) {
             return;
         }
@@ -214,7 +216,7 @@ public abstract class AbstractCommand {
      * 
      * @return <b>true</b> if this command has optional arguments, otherwise <b>false</b>
      */
-    public boolean hasOptionalArguments() {
+    public final boolean hasOptionalArguments() {
         return (this.minimumArgumentCount != this.maximumArgumentCount);
     }
 
@@ -223,7 +225,7 @@ public abstract class AbstractCommand {
      * 
      * @return the minimum argumentcount
      */
-    public int getMinimumArgumentCount() {
+    public final int getMinimumArgumentCount() {
         return minimumArgumentCount;
     }
 
@@ -232,7 +234,7 @@ public abstract class AbstractCommand {
      * 
      * @return the maximum argumentcount
      */
-    public int getMaximumArgumentCount() {
+    public final int getMaximumArgumentCount() {
         return maximumArgumentCount;
     }
 
@@ -241,7 +243,7 @@ public abstract class AbstractCommand {
      * 
      * @return <b>true</b> if the command should be executed, otherwise <b>false</b>
      */
-    public boolean isExecuteSuperCommand() {
+    public final boolean isExecuteSuperCommand() {
         return executeSuperCommand;
     }
 
@@ -250,7 +252,7 @@ public abstract class AbstractCommand {
      * 
      * @return <b>true</b> if the command is a supercommand, <b>false</b> if it is a normal command
      */
-    public boolean isSuperCommand() {
+    public final boolean isSuperCommand() {
         return superCommand;
     }
 
@@ -259,7 +261,7 @@ public abstract class AbstractCommand {
      * 
      * @param command
      */
-    private void setParentCommand(AbstractCommand command) {
+    private final void setParentCommand(AbstractCommand command) {
         this.parentCommand = command;
         if (command != null) {
             this.pluginName = command.pluginName;
@@ -269,7 +271,7 @@ public abstract class AbstractCommand {
     /**
      * Update the subcommands of this command. This method is called automatically.
      */
-    public void updateSubCommands() {
+    public final void updateSubCommands() {
         for (AbstractCommand command : this.subCommands.values()) {
             command.setParentCommand(this);
         }
@@ -280,7 +282,7 @@ public abstract class AbstractCommand {
      * 
      * @return the label
      */
-    public String getLabel() {
+    public final String getLabel() {
         return commandLabel;
     }
 
@@ -289,7 +291,7 @@ public abstract class AbstractCommand {
      * 
      * @param pluginName
      */
-    public void setPluginName(String pluginName) {
+    public final void setPluginName(String pluginName) {
         this.pluginName = pluginName;
     }
 
@@ -298,7 +300,7 @@ public abstract class AbstractCommand {
      * 
      * @return all subcommands
      */
-    public ArrayList<AbstractCommand> getSubCommands() {
+    public final ArrayList<AbstractCommand> getSubCommands() {
         if (this.subCommands != null) {
             return new ArrayList<AbstractCommand>(subCommands.values());
         } else {
@@ -311,7 +313,7 @@ public abstract class AbstractCommand {
      * 
      * @return the argumentstring
      */
-    public String getArguments() {
+    public final String getArguments() {
         return arguments;
     }
 
@@ -320,7 +322,7 @@ public abstract class AbstractCommand {
      * 
      * @return the syntax without the arguments, but with all supercommands
      */
-    public String getCommand() {
+    public final String getCommand() {
         // iterate over every parent and add the label in front of the current syntax
         String syntax = this.getLabel();
         AbstractCommand parent = this.parentCommand;
@@ -336,7 +338,7 @@ public abstract class AbstractCommand {
      * 
      * @return the complete syntax (including supercommands and the argumentstring)
      */
-    public String getSyntax() {
+    public final String getSyntax() {
         // iterate over every parent and add the label in front of the current syntax
         String syntax = this.getLabel();
         AbstractCommand parent = this.parentCommand;
@@ -353,7 +355,7 @@ public abstract class AbstractCommand {
      * 
      * @return the permissionnode
      */
-    public String getPermissionNode() {
+    public final String getPermissionNode() {
         return permissionNode;
     }
 
@@ -362,7 +364,7 @@ public abstract class AbstractCommand {
      * 
      * @return the description
      */
-    public String getDescription() {
+    public final String getDescription() {
         return description;
     }
 
@@ -372,7 +374,7 @@ public abstract class AbstractCommand {
      * @param command
      * @return <b>true</b> if the command is registered successfully, otherwise <b>false</b>
      */
-    protected boolean registerCommand(AbstractCommand command) {
+    protected final boolean registerCommand(AbstractCommand command) {
         // create the map, if it is null
         if (this.subCommands == null) {
             this.subCommands = new HashMap<String, AbstractCommand>();
@@ -386,7 +388,6 @@ public abstract class AbstractCommand {
 
         // store the command
         this.subCommands.put(command.getLabel(), command);
-        ConsoleUtils.printInfo(this.pluginName, "OK --> Registered subcommand '" + command.getLabel() + "' in '" + this.getCommand() + "'!");
 
         // finally update the command and initialize it
         command.setPluginName(pluginName);
@@ -399,34 +400,23 @@ public abstract class AbstractCommand {
     /**
      * Print the syntax for this command.
      */
-    public void printSyntax() {
-        // TODO: Update this method for the use with Bukkit
-        if (!this.isSuperCommand() || this.executeSuperCommand) {
-            // normal command, just print the syntax
-            ConsoleUtils.printError(this.pluginName, "Wrong syntax!");
-            ConsoleUtils.printInfo(this.getSyntax());
-        } else {
-            // we have a supercommand : so we list all available subcommands and the command itself
-            this.listCommand();
-        }
+    public final void printWrongSyntax(CommandSender sender) {
+        ChatUtils.printError(sender, "[" + this.pluginName + "]", "Falsche Syntax!");
+        this.listCommand(sender);
     }
 
     /**
      * List the command
      */
-    public void listCommand() {
-        // TODO: Update this method for the use with Bukkit
-        ConsoleUtils.printInfo("");
-        ConsoleUtils.printInfo(this.getLabel() + '\t' + "-> Description: " + this.description + '\t' + "-> " + this.permissionNode);
+    public final void listCommand(CommandSender sender) {
+        ChatUtils.printInfo(sender, "[" + this.pluginName + "]", ChatColor.GRAY, this.getSyntax());
         ArrayList<AbstractCommand> subCommands = getSubCommands();
         for (AbstractCommand subCommand : subCommands) {
-            ConsoleUtils.printInfo("-> " + '\t' + subCommand.getLabel() + " " + subCommand.getArguments() + '\t' + "-> Description: " + subCommand.getDescription() + '\t' + "-> " + subCommand.getPermissionNode());
+            ChatUtils.printInfo(sender, "[" + this.pluginName + "]", ChatColor.GRAY, subCommand.getSyntax());
         }
     }
 
-    public boolean handleCommand(CommandSender sender, String label, String[] arguments) {
-        // TODO: Update this method for the use with Bukkit
-
+    public final boolean handleCommand(CommandSender sender, String label, String[] arguments) {
         // cast the label to lowercase
         label = label.toLowerCase();
 
@@ -451,12 +441,13 @@ public abstract class AbstractCommand {
                     // (2.2)
 
                     // print the syntax
-                    this.printSyntax();
+                    this.printWrongSyntax(sender);
                 }
                 // this.execute(newArguments);
                 return true;
             } else {
-                ConsoleUtils.printError(pluginName, "Command '" + this.commandLabel + " " + label + "' not found.");
+                // print the syntax
+                this.listCommand(sender);
                 return false;
             }
         }
@@ -492,7 +483,7 @@ public abstract class AbstractCommand {
                     // (1.2.2)
 
                     // print the syntax
-                    command.printSyntax();
+                    command.listCommand(sender);
                 }
             }
             return true;
@@ -511,7 +502,7 @@ public abstract class AbstractCommand {
                 // (2.2)
 
                 // print the syntax
-                command.printSyntax();
+                command.printWrongSyntax(sender);
             }
             return true;
         }

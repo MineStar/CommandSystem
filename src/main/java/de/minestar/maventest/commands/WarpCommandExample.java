@@ -8,6 +8,7 @@ import de.minestar.maventest.annotations.Execution;
 import de.minestar.maventest.annotations.Label;
 import de.minestar.maventest.annotations.PermissionNode;
 import de.minestar.maventest.commandsystem.AbstractCommand;
+import de.minestar.minestarlibrary.utils.PlayerUtils;
 
 @Label(label = "/warp")
 @Arguments(arguments = "<Warpname>")
@@ -27,6 +28,6 @@ public class WarpCommandExample extends AbstractCommand {
         for (String t : arguments) {
             args += t + " ";
         }
-        System.out.println("DONE: /warp " + args);
+        PlayerUtils.sendSuccess(player, "DONE: /warp " + args);
     }
 }

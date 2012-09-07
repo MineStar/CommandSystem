@@ -7,6 +7,7 @@ import de.minestar.maventest.annotations.Description;
 import de.minestar.maventest.annotations.Label;
 import de.minestar.maventest.annotations.PermissionNode;
 import de.minestar.maventest.commandsystem.AbstractCommand;
+import de.minestar.minestarlibrary.utils.PlayerUtils;
 
 @Label(label = "/normal")
 @Arguments(arguments = "<MUST> [optional]")
@@ -16,6 +17,10 @@ public class NormalCommandExample extends AbstractCommand {
 
     @Override
     public void execute(Player player, String[] arguments) {
-        System.out.println("execute NormalCommand");
+        String args = "";
+        for (String t : arguments) {
+            args += t + " ";
+        }
+        PlayerUtils.sendSuccess(player, "DONE: /normal " + args);
     }
 }

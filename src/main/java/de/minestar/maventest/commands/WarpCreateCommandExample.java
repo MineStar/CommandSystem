@@ -7,6 +7,7 @@ import de.minestar.maventest.annotations.Description;
 import de.minestar.maventest.annotations.Label;
 import de.minestar.maventest.annotations.PermissionNode;
 import de.minestar.maventest.commandsystem.AbstractCommand;
+import de.minestar.minestarlibrary.utils.PlayerUtils;
 
 @Label(label = "create")
 @Arguments(arguments = "<Warpname>")
@@ -20,6 +21,6 @@ public class WarpCreateCommandExample extends AbstractCommand {
         for (String t : arguments) {
             args += t + " ";
         }
-        System.out.println("DONE: /warp create " + args);
+        PlayerUtils.sendSuccess(player, "DONE: /warp create " + args);
     }
 }

@@ -1,30 +1,11 @@
-name: MoneyPit
-main: de.minestar.moneypit.MoneyPitCore
+name: CommandSystem
+main: de.minestar.maventest.MavenTestCore
 version: ${pom.version}
-depend: [MineStarLibrary, MinestarCore]
-softdepend: [GreenMile]
+depend: [MineStarLibrary]
 commands:
-  cremove:
+  warp:
     description: Remove a protection
-    usage: /cremove
-  cinfo:
+    usage: /warp
+  normal:
     description: Get some information about a protection
-    usage: /cinfo
-  cprivate:
-    description: Add a private protection
-    usage: /cprivate
-  cpublic:
-    description: Add a public protection
-    usage: /cpublic
-  cgift:
-    description: Add a gift protection
-    usage: /cgift
-  cinvite:
-    description: Invite players to a private protection
-    usage: /cinvite <Player> [... Player n]
-  cuninvite:
-    description: Uninvite players from a private protection
-    usage: /cuninvite <Player> [... Player n]
-  cuninviteall:
-    description: Uninvite all players from a private protection
-    usage: /cuninviteall
+    usage: /normal
