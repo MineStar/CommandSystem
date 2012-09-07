@@ -59,6 +59,18 @@ public class CommandHandler {
             label = "/" + label;
         }
 
+        // //////////////////////////////////////
+        // DEBUGCODE
+        String argText = "";
+        for (String arg : arguments) {
+            argText += " " + arg;
+        }
+
+        System.out.println('\n' + "Executing: " + label + argText);
+
+        // DEBUGCODE
+        // //////////////////////////////////////
+
         // lookup the command
         AbstractCommand command = this.registeredCommands.get(label);
         if (command == null) {
