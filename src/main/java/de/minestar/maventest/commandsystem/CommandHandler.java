@@ -2,6 +2,8 @@ package de.minestar.maventest.commandsystem;
 
 import java.util.HashMap;
 
+import org.bukkit.command.CommandSender;
+
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
 
 public class CommandHandler {
@@ -48,9 +50,7 @@ public class CommandHandler {
     /**
      * Handle a command for this CommandHandler
      */
-    public boolean handleCommand(String label, String[] arguments) {
-        // TODO: Update this method for the use with Bukkit
-
+    public boolean handleCommand(CommandSender sender, String label, String[] arguments) {
         // cast the label to lowercase
         label = label.toLowerCase();
 
@@ -97,7 +97,7 @@ public class CommandHandler {
                 System.arraycopy(arguments, 1, newArguments, 0, newArguments.length);
 
                 // handle the command
-                command.handleCommand(label, newArguments);
+                command.handleCommand(sender, label, newArguments);
             } else {
                 // (1.2)
                 if (command.isExecuteSuperCommand()) {
@@ -110,7 +110,7 @@ public class CommandHandler {
                         // (2.1)
 
                         // execute the command
-                        command.execute(arguments);
+                        command.run(sender, arguments);
                     } else {
                         // (2.2)
 
@@ -135,7 +135,7 @@ public class CommandHandler {
                 // (2.1)
 
                 // execute the command
-                command.execute(arguments);
+                command.run(sender, arguments);
             } else {
                 // (2.2)
 

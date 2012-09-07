@@ -3,14 +3,24 @@ package de.minestar.maventest.commandsystem;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
+
+import com.bukkit.gemo.utils.UtilPermissions;
+
 import de.minestar.maventest.annotations.Arguments;
 import de.minestar.maventest.annotations.Description;
 import de.minestar.maventest.annotations.Execution;
 import de.minestar.maventest.annotations.Label;
 import de.minestar.maventest.annotations.PermissionNode;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
+import de.minestar.minestarlibrary.utils.PlayerUtils;
 
 public abstract class AbstractCommand {
+
+    // String for no permissions
+    public final static String NO_PERMISSION = "You are not allowed to use this command!";
 
     // the pluginName (for easier use with ConsoleUtils/PlayerUtils)
     private String pluginName;
@@ -94,9 +104,57 @@ public abstract class AbstractCommand {
         this.countArguments();
     }
 
-    public void execute(String[] arguments) {
-        // TODO Auto-generated method stub
+    /**
+     * @param player
+     * @return True, if the sender has enough permission to use the command Or the permissionnode is empty, so everybody can use it
+     */
+    protected boolean hasPermission(Player player) {
+        return permissionNode.length() == 0 || UtilPermissions.playerCanUseCommand(player, this.getPermissionNode());
+    }
 
+    /**
+     * Execute the command. This will also check the permissions for players.
+     * 
+     * @param sender
+     * @param arguments
+     */
+    public void run(CommandSender sender, String[] arguments) {
+        if (sender instanceof Player) {
+            // get the player
+            Player player = (Player) sender;
+
+            // check the permission
+            if (!hasPermission(player)) {
+                PlayerUtils.sendError((Player) sender, pluginName, NO_PERMISSION);
+                return;
+            }
+
+            // execute the command for a player
+            this.execute(player, arguments);
+        } else {
+            // execute the command for the console
+            this.execute((ConsoleCommandSender) sender, arguments);
+        }
+    }
+
+    /**
+     * Execute the command for a player.
+     * 
+     * @param console
+     * @param arguments
+     */
+    public void execute(Player player, String[] arguments) {
+        ConsoleUtils.printError(pluginName, "The command '" + this.getSyntax() + "' cannot be executed by a player!");
+    }
+
+    /**
+     * Execute the command for the console.
+     * 
+     * @param console
+     * @param arguments
+     */
+    public void execute(ConsoleCommandSender console, String[] arguments) {
+        ConsoleUtils.printError(pluginName, "The command '" + this.getSyntax() + "' cannot be executed by console!");
     }
 
     /**
@@ -356,7 +414,7 @@ public abstract class AbstractCommand {
         }
     }
 
-    public boolean handleCommand(String label, String[] arguments) {
+    public boolean handleCommand(CommandSender sender, String label, String[] arguments) {
         // TODO: Update this method for the use with Bukkit
 
         // cast the label to lowercase
@@ -378,7 +436,7 @@ public abstract class AbstractCommand {
                     // (2.1)
 
                     // execute the command
-                    this.execute(newArguments);
+                    this.run(sender, newArguments);
                 } else {
                     // (2.2)
 
@@ -412,14 +470,14 @@ public abstract class AbstractCommand {
                 System.arraycopy(arguments, 1, newArguments, 0, newArguments.length);
 
                 // handle the command
-                command.handleCommand(label, newArguments);
+                command.handleCommand(sender, label, newArguments);
             } else {
                 // (1.2)
                 if (command.isExecuteSuperCommand()) {
                     // (1.2.1)
 
                     // execute the command
-                    command.execute(arguments);
+                    command.run(sender, arguments);
                 } else {
                     // (1.2.2)
 
@@ -438,7 +496,7 @@ public abstract class AbstractCommand {
                 // (2.1)
 
                 // execute the command
-                command.execute(arguments);
+                command.run(sender, arguments);
             } else {
                 // (2.2)
 

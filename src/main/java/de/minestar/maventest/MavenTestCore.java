@@ -14,9 +14,6 @@ public class MavenTestCore extends AbstractCore {
         CommandHandler commandHandler = new CommandHandler(NAME);
         commandHandler.registerCommand(new WarpCommandExample());
         commandHandler.registerCommand(new NormalCommandExample());
-
-        commandHandler.listCommands();
-
         return super.createCommands();
     }
 }

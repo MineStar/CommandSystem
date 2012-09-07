@@ -1,5 +1,7 @@
 package de.minestar.maventest.commands;
 
+import org.bukkit.entity.Player;
+
 import de.minestar.maventest.annotations.Arguments;
 import de.minestar.maventest.annotations.Description;
 import de.minestar.maventest.annotations.Label;
@@ -13,7 +15,7 @@ import de.minestar.maventest.commandsystem.AbstractCommand;
 public class NormalCommandExample extends AbstractCommand {
 
     @Override
-    public void execute(String[] arguments) {
+    public void execute(Player player, String[] arguments) {
         System.out.println("execute NormalCommand");
     }
 }
