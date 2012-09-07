@@ -31,14 +31,14 @@ public class CommandHandler {
         command.setPluginName(pluginName);
 
         // CHECK: is the command already registered?
-        if (this.registeredCommands.containsKey(command.getCommandLabel())) {
-            ConsoleUtils.printError(pluginName, "ERROR: Command '" + command.getCommandLabel() + "' is already registered in '" + command.getCompleteCommand() + "'!");
+        if (this.registeredCommands.containsKey(command.getLabel())) {
+            ConsoleUtils.printError(pluginName, "ERROR: Command '" + command.getLabel() + "' is already registered in '" + command.getCommand() + "'!");
             return false;
         }
 
         // register the command
-        this.registeredCommands.put(command.getCommandLabel(), command);
-        ConsoleUtils.printInfo(pluginName, "OK --> Registered command '" + command.getCommandLabel() + "'!");
+        this.registeredCommands.put(command.getLabel(), command);
+        ConsoleUtils.printInfo(pluginName, "OK --> Registered command '" + command.getLabel() + "'!");
 
         // initialize the subcommands for the given command
         command.initializeSubCommands();
@@ -107,7 +107,7 @@ public class CommandHandler {
             // check the argumentcount to see if the passed argumentcount is correct for this command. Execute the command if it is true (2.1) , otherwise print the syntax (2.2).
 
             // check argumentcount & try to execute it
-            if ((!command.hasOptionalCommands() && arguments.length == command.getMinArgumentCount()) || (command.hasOptionalCommands() && arguments.length >= command.getMinArgumentCount() && arguments.length <= command.getMaxArgumentCount())) {
+            if ((!command.hasOptionalArguments() && arguments.length == command.getMinimumArgumentCount()) || (command.hasOptionalArguments() && arguments.length >= command.getMinimumArgumentCount() && arguments.length <= command.getMaximumArgumentCount())) {
                 // (2.1)
 
                 // execute the command
@@ -133,7 +133,7 @@ public class CommandHandler {
         ConsoleUtils.printInfo("List of registered commands:");
         ConsoleUtils.printInfo("------------------------------------------");
         for (AbstractCommand command : this.registeredCommands.values()) {
-            command.listCommands();
+            command.listCommand();
         }
     }
 }

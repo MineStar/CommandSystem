@@ -8,7 +8,7 @@ import de.minestar.maventest.annotations.Arguments;
 import de.minestar.maventest.commandsystem.AbstractCommand;
 
 @Label(label = "/warp")
-@Arguments(arguments = "")
+@Arguments(arguments = "<Warpname>")
 @PermissionNode(node = "")
 @Description(description = "This is a supercommand. It has no arguments and (in this case) no permissionnode.")
 @Execution(executeSuperCommand = true)

@@ -14,7 +14,7 @@ public class Main {
         commandHandler.registerCommand(new WarpCommandExample());
         commandHandler.registerCommand(new NormalCommandExample());
 
-        commandHandler.listCommands();
+        // commandHandler.listCommands();
 
         String[] arguments = new String[2];
         arguments[0] = "create";
@@ -23,11 +23,9 @@ public class Main {
         System.out.println('\n');
         commandHandler.handleCommand("/warp", arguments);
 
-        arguments = new String[3];
+        arguments = new String[2];
         arguments[0] = "test-1";
         arguments[1] = "test-2";
-        arguments[2] = "test-3";
-
         System.out.println('\n');
         commandHandler.handleCommand("/warp", arguments);
     }
