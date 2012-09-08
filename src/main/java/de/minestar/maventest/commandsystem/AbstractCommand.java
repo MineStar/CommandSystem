@@ -156,7 +156,7 @@ public abstract class AbstractCommand {
      * @param arguments
      */
     public void execute(Player player, String[] arguments) {
-        ConsoleUtils.printError(pluginName, "The command '" + this.getSyntax() + "' cannot be executed by a player!");
+        ConsoleUtils.printError(pluginName, "Das Kommando '" + this.getSyntax() + "' kann nicht von einem Spieler ausgeführt werden!");
     }
 
     /**
@@ -166,7 +166,7 @@ public abstract class AbstractCommand {
      * @param arguments
      */
     public void execute(ConsoleCommandSender console, String[] arguments) {
-        ConsoleUtils.printError(pluginName, "The command '" + this.getSyntax() + "' cannot be executed by console!");
+        ConsoleUtils.printError(pluginName, "Das Kommando '" + this.getSyntax() + "' kann nicht von der Konsole ausgeführt werden!");
     }
 
     /**
