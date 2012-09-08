@@ -3,12 +3,10 @@ package de.minestar.maventest.commandsystem;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-import com.bukkit.gemo.utils.ChatUtils;
 import com.bukkit.gemo.utils.UtilPermissions;
 
 import de.minestar.maventest.annotations.Arguments;
@@ -16,6 +14,7 @@ import de.minestar.maventest.annotations.Description;
 import de.minestar.maventest.annotations.Execution;
 import de.minestar.maventest.annotations.Label;
 import de.minestar.maventest.annotations.PermissionNode;
+import de.minestar.minestarlibrary.utils.ChatUtils;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
@@ -401,7 +400,7 @@ public abstract class AbstractCommand {
      * Print the syntax for this command.
      */
     public final void printWrongSyntax(CommandSender sender) {
-        ChatUtils.printError(sender, "[" + this.pluginName + "]", "Falsche Syntax!");
+        ChatUtils.writeError(sender, this.pluginName, "Falsche Syntax!");
         this.listCommand(sender);
     }
 
@@ -409,10 +408,10 @@ public abstract class AbstractCommand {
      * List the command
      */
     public final void listCommand(CommandSender sender) {
-        ChatUtils.printInfo(sender, "[" + this.pluginName + "]", ChatColor.GRAY, this.getSyntax());
+        ChatUtils.writeInfo(sender, this.pluginName, this.getSyntax());
         ArrayList<AbstractCommand> subCommands = getSubCommands();
         for (AbstractCommand subCommand : subCommands) {
-            ChatUtils.printInfo(sender, "[" + this.pluginName + "]", ChatColor.GRAY, subCommand.getSyntax());
+            ChatUtils.writeInfo(sender, this.pluginName, subCommand.getSyntax());
         }
     }
 
