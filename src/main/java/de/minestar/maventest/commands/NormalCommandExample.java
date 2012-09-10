@@ -2,11 +2,11 @@ package de.minestar.maventest.commands;
 
 import org.bukkit.entity.Player;
 
-import de.minestar.maventest.annotations.Arguments;
-import de.minestar.maventest.annotations.Description;
-import de.minestar.maventest.annotations.Label;
-import de.minestar.maventest.annotations.PermissionNode;
 import de.minestar.maventest.commandsystem.AbstractCommand;
+import de.minestar.maventest.commandsystem.annotations.Arguments;
+import de.minestar.maventest.commandsystem.annotations.Description;
+import de.minestar.maventest.commandsystem.annotations.Label;
+import de.minestar.maventest.commandsystem.annotations.PermissionNode;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
 @Label(label = "/normal")

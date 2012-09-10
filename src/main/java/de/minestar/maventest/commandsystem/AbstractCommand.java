@@ -9,11 +9,11 @@ import org.bukkit.entity.Player;
 
 import com.bukkit.gemo.utils.UtilPermissions;
 
-import de.minestar.maventest.annotations.Arguments;
-import de.minestar.maventest.annotations.Description;
-import de.minestar.maventest.annotations.Execution;
-import de.minestar.maventest.annotations.Label;
-import de.minestar.maventest.annotations.PermissionNode;
+import de.minestar.maventest.commandsystem.annotations.Arguments;
+import de.minestar.maventest.commandsystem.annotations.Description;
+import de.minestar.maventest.commandsystem.annotations.Execution;
+import de.minestar.maventest.commandsystem.annotations.Label;
+import de.minestar.maventest.commandsystem.annotations.PermissionNode;
 import de.minestar.minestarlibrary.utils.ChatUtils;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
