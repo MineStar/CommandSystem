@@ -381,7 +381,6 @@ public abstract class AbstractCommand {
 
         // is a subcommand with this label already registered?
         if (this.subCommands.containsKey(command.getLabel())) {
-            ConsoleUtils.printError("Command '" + command.getLabel() + "' is already registered in '" + this.getCommand() + "'!");
             return false;
         }
 

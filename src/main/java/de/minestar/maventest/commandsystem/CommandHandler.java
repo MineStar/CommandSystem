@@ -37,7 +37,6 @@ public class CommandHandler {
 
         // CHECK: is the command already registered?
         if (this.registeredCommands.containsKey(command.getLabel())) {
-            ConsoleUtils.printError(pluginName, "ERROR: Command '" + command.getLabel() + "' is already registered in '" + command.getCommand() + "'!");
             return false;
         }
 
