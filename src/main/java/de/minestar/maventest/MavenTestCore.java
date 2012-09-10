@@ -40,8 +40,10 @@ public class MavenTestCore extends JavaPlugin {
     }
 
     public final void registerCommand(AbstractCommand command) {
-        if (!commandHandler.registerCommand(command)) {
-            throw new RuntimeException("Command '" + command.getLabel() + "' is already registered in '" + command.getCommand() + "'!");
+        try {
+            commandHandler.registerCommand(command);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
     }
 

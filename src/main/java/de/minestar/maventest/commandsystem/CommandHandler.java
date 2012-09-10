@@ -37,7 +37,7 @@ public class CommandHandler {
 
         // CHECK: is the command already registered?
         if (this.registeredCommands.containsKey(command.getLabel())) {
-            return false;
+            throw new RuntimeException("Command '" + command.getLabel() + "' is already registered in '" + command.getCommand() + "'!");
         }
 
         // register the command
