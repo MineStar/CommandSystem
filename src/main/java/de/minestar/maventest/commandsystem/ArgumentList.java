@@ -342,14 +342,6 @@ public class ArgumentList {
         return defaultValue;
     }
 
-    // DEBUG
-    public static void main(String[] args) {
-        ArgumentList aList = new ArgumentList(new Object[]{1, 2, 3, 4, 5});
-        for (Integer s : aList.getIterator(Integer.class, 0)) {
-            System.out.print(s + " ");
-        }
-    }
-
     /**
      * Returns an iterator to iterator through all values which are
      * automatically converted to an instance of T. The iterator start at the
