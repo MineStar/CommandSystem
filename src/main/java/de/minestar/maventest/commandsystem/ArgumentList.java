@@ -11,8 +11,7 @@ public class ArgumentList {
     private final int offset;
 
     /**
-     * Create a ArgumentList holding an reference on the object array. You can
-     * get all elements in the object
+     * Create a ArgumentList holding an reference on the object array. You can get all elements in the object
      * 
      * @param args
      *            The arguments from the command
@@ -36,8 +35,7 @@ public class ArgumentList {
     }
 
     /**
-     * The length of the argument list. It is the length of the array minus the
-     * offset
+     * The length of the argument list. It is the length of the array minus the offset
      * 
      * @return Count of arguments
      */
@@ -54,15 +52,11 @@ public class ArgumentList {
     }
 
     /**
-     * Convert the argument on the position 'index' to a Boolean. When the
-     * argument is "0" or "false" it will return Boolean.FALSE. When the
-     * argument is "1" or "true" it will return Boolea.TRUE. Otherwise, return
-     * <code>null</code>
+     * Convert the argument on the position 'index' to a Boolean. When the argument is "0" or "false" it will return Boolean.FALSE. When the argument is "1" or "true" it will return Boolea.TRUE. Otherwise, return <code>null</code>
      * 
      * @param index
      *            The index of the parameter in the list
-     * @return <code>Null</code>, when the value is no Boolean or the Boolean
-     *         value itself
+     * @return <code>Null</code>, when the value is no Boolean or the Boolean value itself
      */
     public Boolean getBoolean(int index) {
         String arg = args[index].toString();
@@ -75,17 +69,13 @@ public class ArgumentList {
     }
 
     /**
-     * Convert the argument on the position 'index' to a Boolean. When the
-     * argument is "0" or "false" it will return Boolean.FALSE. When the
-     * argument is "1" or "true" it will return Boolea.TRUE. Otherwise, return
-     * <code>defaultValue</code>
+     * Convert the argument on the position 'index' to a Boolean. When the argument is "0" or "false" it will return Boolean.FALSE. When the argument is "1" or "true" it will return Boolea.TRUE. Otherwise, return <code>defaultValue</code>
      * 
      * @param index
      *            The index of the parameter in the list
      * @param defaultValue
      *            The default value returned when the argument is no boolean
-     * @return The <code>defaultValue</code>, when the value is no Boolean or
-     *         return the Boolean value itself
+     * @return The <code>defaultValue</code>, when the value is no Boolean or return the Boolean value itself
      */
     public Boolean getBoolean(int index, Boolean defaultValue) {
         Boolean result = getBoolean(index);
@@ -93,14 +83,11 @@ public class ArgumentList {
     }
 
     /**
-     * Convert the argument on the position 'index' to a Byte using
-     * {@link Byte#parseByte(String)}. When this method throws a
-     * {@link NumberFormatException} it will return null instead.
+     * Convert the argument on the position 'index' to a Byte using {@link Byte#parseByte(String)}. When this method throws a {@link NumberFormatException} it will return null instead.
      * 
      * @param index
      *            The index of the parameter in the list
-     * @return <code>Null</code>, when the argument is no Byte. Otherwise return
-     *         the value
+     * @return <code>Null</code>, when the argument is no Byte. Otherwise return the value
      */
     public Byte getByte(int index) {
         try {
@@ -111,17 +98,13 @@ public class ArgumentList {
     }
 
     /**
-     * Convert the argument on the position 'index' to a Byte using
-     * {@link Byte#parseByte(String)}. When this method throws a
-     * {@link NumberFormatException} it will return the
-     * <code>defaultValue</code> instead.
+     * Convert the argument on the position 'index' to a Byte using {@link Byte#parseByte(String)}. When this method throws a {@link NumberFormatException} it will return the <code>defaultValue</code> instead.
      * 
      * @param index
      *            The index of the parameter in the list
      * @param defaultValue
      *            The default value returned when the argument is no Byte
-     * @return <code>defaultValue</code>, when the argument is no Byte.
-     *         Otherwise return the value
+     * @return <code>defaultValue</code>, when the argument is no Byte. Otherwise return the value
      */
     public Byte getByte(int index, Byte defaultValue) {
         Byte result = getByte(index);
@@ -129,14 +112,11 @@ public class ArgumentList {
     }
 
     /**
-     * Convert the argument on the position 'index' to a Short using
-     * {@link Short#parseShort(String)}. When this method throws a
-     * {@link NumberFormatException} it will return null instead.
+     * Convert the argument on the position 'index' to a Short using {@link Short#parseShort(String)}. When this method throws a {@link NumberFormatException} it will return null instead.
      * 
      * @param index
      *            The index of the parameter in the list
-     * @return <code>Null</code>, when the argument is no Short. Otherwise
-     *         return the value
+     * @return <code>Null</code>, when the argument is no Short. Otherwise return the value
      */
     public Short getShort(int index) {
         try {
@@ -147,17 +127,13 @@ public class ArgumentList {
     }
 
     /**
-     * Convert the argument on the position 'index' to a Short using
-     * {@link Short#parseShort(String)}. When this method throws a
-     * {@link NumberFormatException} it will return the
-     * <code>defaultValue</code> instead.
+     * Convert the argument on the position 'index' to a Short using {@link Short#parseShort(String)}. When this method throws a {@link NumberFormatException} it will return the <code>defaultValue</code> instead.
      * 
      * @param index
      *            The index of the parameter in the list
      * @param defaultValue
      *            The default value returned when the argument is no Short
-     * @return <code>defaultValue</code>, when the argument is no Short.
-     *         Otherwise return the value
+     * @return <code>defaultValue</code>, when the argument is no Short. Otherwise return the value
      */
     public Short getShort(int index, Short defaultValue) {
         Short result = getShort(index);
@@ -165,14 +141,11 @@ public class ArgumentList {
     }
 
     /**
-     * Convert the argument on the position 'index' to an Integer using
-     * {@link Integer#parseInteger(String)}. When this method throws a
-     * {@link NumberFormatException} it will return null instead.
+     * Convert the argument on the position 'index' to an Integer using {@link Integer#parseInteger(String)}. When this method throws a {@link NumberFormatException} it will return null instead.
      * 
      * @param index
      *            The index of the parameter in the list
-     * @return <code>Null</code>, when the argument is no Integer. Otherwise
-     *         return the value
+     * @return <code>Null</code>, when the argument is no Integer. Otherwise return the value
      */
     public Integer getInt(int index) {
         try {
@@ -183,17 +156,13 @@ public class ArgumentList {
     }
 
     /**
-     * Convert the argument on the position 'index' to an Integer using
-     * {@link Integer#parseInteger(String)}. When this method throws a
-     * {@link NumberFormatException} it will return the
-     * <code>defaultValue</code> instead.
+     * Convert the argument on the position 'index' to an Integer using {@link Integer#parseInteger(String)}. When this method throws a {@link NumberFormatException} it will return the <code>defaultValue</code> instead.
      * 
      * @param index
      *            The index of the parameter in the list
      * @param defaultValue
      *            The default value returned when the argument is no Integer
-     * @return <code>defaultValue</code>, when the argument is no Integer.
-     *         Otherwise return the value
+     * @return <code>defaultValue</code>, when the argument is no Integer. Otherwise return the value
      */
     public Integer getInt(int index, Integer defaultValue) {
         Integer result = getInt(index);
@@ -201,14 +170,11 @@ public class ArgumentList {
     }
 
     /**
-     * Convert the argument on the position 'index' to a Long using
-     * {@link Long#parseLong(String)}. When this method throws a
-     * {@link NumberFormatException} it will return null instead.
+     * Convert the argument on the position 'index' to a Long using {@link Long#parseLong(String)}. When this method throws a {@link NumberFormatException} it will return null instead.
      * 
      * @param index
      *            The index of the parameter in the list
-     * @return <code>Null</code>, when the argument is no Long. Otherwise return
-     *         the value
+     * @return <code>Null</code>, when the argument is no Long. Otherwise return the value
      */
     public Long getLong(int index) {
         try {
@@ -219,17 +185,13 @@ public class ArgumentList {
     }
 
     /**
-     * Convert the argument on the position 'index' to a Long using
-     * {@link Long#parseLong(String)}. When this method throws a
-     * {@link NumberFormatException} it will return the
-     * <code>defaultValue</code> instead.
+     * Convert the argument on the position 'index' to a Long using {@link Long#parseLong(String)}. When this method throws a {@link NumberFormatException} it will return the <code>defaultValue</code> instead.
      * 
      * @param index
      *            The index of the parameter in the list
      * @param defaultValue
      *            The default value returned when the argument is no Long
-     * @return <code>defaultValue</code>, when the argument is no Long.
-     *         Otherwise return the value
+     * @return <code>defaultValue</code>, when the argument is no Long. Otherwise return the value
      */
     public Long getLong(int index, Long defaultValue) {
         Long result = getLong(index);
@@ -287,20 +249,13 @@ public class ArgumentList {
     }
 
     /**
-     * Try to convert the argument at position 'index' to an instance of
-     * <code>T</code>. This uses the defined getter methods in
-     * {@link ArgumentList}. When there is no getter method for a Class of T, it
-     * will return the <code>defaultValue</code>
+     * Try to convert the argument at position 'index' to an instance of <code>T</code>. This uses the defined getter methods in {@link ArgumentList}. When there is no getter method for a Class of T, it will return the <code>defaultValue</code>
      * 
      * @param clazz
      *            The class of T to convert to
      * @param defaultValue
-     *            The default value returned when the argument cannot be
-     *            converted to an instance of T OR the class of T is not
-     *            supported
-     * @return <code>Null</code>, when T is not supported(no getter function) OR
-     *         the getter function cannot convert the argument. Otherwise a
-     *         converted instance of T
+     *            The default value returned when the argument cannot be converted to an instance of T OR the class of T is not supported
+     * @return <code>Null</code>, when T is not supported(no getter function) OR the getter function cannot convert the argument. Otherwise a converted instance of T
      */
     @SuppressWarnings("unchecked")
     public <T> T get(Class<T> clazz, int index) {
@@ -315,10 +270,7 @@ public class ArgumentList {
     }
 
     /**
-     * Try to convert the argument at position 'index' to an instance of
-     * <code>T</code>. This uses the defined getter methods in
-     * {@link ArgumentList}. When there is no getter method for a Class of T, it
-     * will return null
+     * Try to convert the argument at position 'index' to an instance of <code>T</code>. This uses the defined getter methods in {@link ArgumentList}. When there is no getter method for a Class of T, it will return null
      * 
      * @param clazz
      *            The class of T to convert to
@@ -326,9 +278,7 @@ public class ArgumentList {
      *            The index of the parameter in the list
      * @param index
      *            The index of the parameter in the list
-     * @return <code>defaultValue</code>, when T is not supported(no getter
-     *         function) OR the getter function cannot convert the argument.
-     *         Otherwise a converted instance of T
+     * @return <code>defaultValue</code>, when T is not supported(no getter function) OR the getter function cannot convert the argument. Otherwise a converted instance of T
      */
     @SuppressWarnings("unchecked")
     public <T> T get(Class<T> clazz, int index, T defaultValue) {
@@ -343,9 +293,7 @@ public class ArgumentList {
     }
 
     /**
-     * Returns an iterator to iterator through all values which are
-     * automatically converted to an instance of T. The iterator start at the
-     * position index. <br>
+     * Returns an iterator to iterator through all values which are automatically converted to an instance of T. The iterator start at the position index. <br>
      * Example usage: <br>
      * 
      * <pre>
@@ -357,8 +305,7 @@ public class ArgumentList {
      *      Result: 1 2 3 4 5
      * </pre>
      * 
-     * This will use the {@link ArgumentList#get(Class, int)} method to get the
-     * value at the position
+     * This will use the {@link ArgumentList#get(Class, int)} method to get the value at the position
      * 
      * @param clazz
      *            The class of T to convert to

@@ -8,6 +8,7 @@ public class ArgumentTree {
     private static String KEYS_INF_ARG = "...";
 
     private int minArguments, maxArguments, countOptArgs;
+    private boolean endless = false;
     private final ArgumentTree parent;
     private ArgumentTree child;
     private final String syntax;
@@ -47,7 +48,7 @@ public class ArgumentTree {
             }
 
             argList.add(argType);
-            singleArgs.add(singleArg);
+            singleArgs.add(("|" + singleArg + "|").toLowerCase());
 
             ++this.maxArguments;
             if (!argType.equals(ArgumentType.OPTIONAL) && !argType.equals(ArgumentType.ENDLESS) && !argType.equals(ArgumentType.NONE)) {
@@ -60,6 +61,7 @@ public class ArgumentTree {
                 break;
             } else if (argType.equals(ArgumentType.ENDLESS)) {
                 this.maxArguments = Integer.MAX_VALUE;
+                endless = true;
                 countOptArgs = this.maxArguments;
                 break;
             }
@@ -84,7 +86,7 @@ public class ArgumentTree {
         }
 
         if (arguments.length < this.getMinArguments() || arguments.length > this.getOptArgumentCount()) {
-            return false;
+            return endless && arguments.length >= this.getMinArguments();
         }
 
         int argCount = this.getOptArgumentCount();
@@ -108,7 +110,7 @@ public class ArgumentTree {
                 }
             } else {
                 if (type.equals(ArgumentType.KEYWORD)) {
-                    if (!singleArg.equalsIgnoreCase(currentArg)) {
+                    if (!singleArg.contains("|" + currentArg.toLowerCase() + "|")) {
                         return false;
                     }
                 }
