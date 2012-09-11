@@ -7,7 +7,7 @@ public class ArgumentTree {
     private static String KEYS_OPT_ARGS = "[]";
     private static String KEYS_INF_ARG = "...";
 
-    private int minArguments, maxArguments, neededMustArgs, countOptArgs;
+    private int minArguments, maxArguments, countOptArgs;
     private final ArgumentTree parent;
     private ArgumentTree child;
     private final String syntax;
@@ -33,7 +33,6 @@ public class ArgumentTree {
         }
         this.minArguments = 0;
         this.maxArguments = 0;
-        this.neededMustArgs = 0;
         this.argList = new ArrayList<ArgumentType>();
         this.singleArgs = new ArrayList<String>();
         ArrayList<String> arguments = getArguments(this.syntax);
@@ -51,81 +50,88 @@ public class ArgumentTree {
             singleArgs.add(singleArg);
 
             ++this.maxArguments;
-            if (argType.equals(ArgumentType.NEEDED) || argType.equals(ArgumentType.KEYWORD)) {
-                ++this.neededMustArgs;
-            }
             if (!argType.equals(ArgumentType.OPTIONAL) && !argType.equals(ArgumentType.ENDLESS) && !argType.equals(ArgumentType.NONE)) {
                 ++this.minArguments;
             }
             if (argType.equals(ArgumentType.OPTIONAL)) {
                 // String arg = getArgumentWithoutArg(singleArg);
+                ++countOptArgs;
                 this.child = new ArgumentTree(this, getArgumentWithoutArg(singleArg));
                 break;
             } else if (argType.equals(ArgumentType.ENDLESS)) {
                 this.maxArguments = Integer.MAX_VALUE;
+                countOptArgs = this.maxArguments;
                 break;
             }
         }
 
-        this.countMaxArguments();
-
-        System.out.println("result: " + syntax + " -> " + this.getMinArguments() + " / " + this.maxArguments);
+        System.out.println("result: " + syntax + " -> " + this.getMinArguments() + " / " + this.getOptArgumentCount());
         System.out.println("Types: " + this.argList.toString().substring(1, this.argList.toString().length() - 1));
         System.out.println("SingleArgs: " + this.singleArgs.toString().substring(1, this.singleArgs.toString().length() - 1));
         System.out.println("-----------------------------------");
     }
 
-    private int countMaxArguments() {
-        this.maxArguments = this.neededMustArgs;
-        if (this.child != null) {
-            this.maxArguments += this.child.countMaxArguments();
-            if (this.parent != null) {
-                // this.maxArguments += this.parent.neededMustArgs;
-            }
-        }
-        return this.maxArguments;
-    }
-
     public boolean validate(String[] arguments) {
-        return this.validate(arguments, 0);
-    }
+        if (this.parent == null) {
+            String txt = "";
+            for (String t : arguments) {
+                txt += t + " ";
+            }
+            if (txt.length() > 1) {
+                txt = txt.substring(0, txt.length() - 1);
+            }
+            System.out.println("validating input: '" + txt + "' ( COUNT: " + arguments.length + " ) ");
+        }
 
-    public boolean validate(String[] arguments, int index) {
-        int restCount = arguments.length - index;
-        if (restCount < this.minArguments) {
+        if (arguments.length < this.getMinArguments() || arguments.length > this.getOptArgumentCount()) {
             return false;
         }
-        if (restCount == this.minArguments) {
-            ArgumentType type;
-            for (int i = 0; i < restCount; i++) {
-                type = this.argList.get(i);
-                if (type.equals(ArgumentType.OPTIONAL)) {
-                    if (this.child != null) {
-                        if (this.child.getMinArguments() == 0) {
-                            return false;
-                        }
+
+        int argCount = this.getOptArgumentCount();
+
+        ArgumentType type;
+        String singleArg, currentArg;
+        for (int index = 0; index < argCount && index < arguments.length; index++) {
+            type = this.argList.get(index);
+            singleArg = this.singleArgs.get(index);
+            currentArg = arguments[index];
+            if (type.equals(ArgumentType.OPTIONAL)) {
+                if (this.child != null) {
+                    int newLength = arguments.length - 1;
+                    if (newLength < child.getMinArguments() || newLength > child.getOptArgumentCount()) {
+                        return false;
+                    } else {
+                        String[] newArguments = new String[newLength];
+                        System.arraycopy(arguments, 1, newArguments, 0, newArguments.length);
+                        return child.validate(newArguments);
+                    }
+                }
+            } else {
+                if (type.equals(ArgumentType.KEYWORD)) {
+                    if (!singleArg.equalsIgnoreCase(currentArg)) {
+                        return false;
                     }
                 }
             }
-            return true;
         }
-        return restCount >= this.maxArguments;
+        return true;
     }
-
     public int getMinimalArguments() {
         return minArguments;
     }
 
     public int getMinArguments() {
+        if (this.parent != null) {
+            return minArguments;
+        }
         return minArguments;
     }
 
-    public int getMaxArguments() {
+    public int getOptArgumentCount() {
         if (child != null) {
-            return maxArguments + child.getMinimalArguments();
-        } else {
-            return maxArguments;
+            return countOptArgs + child.getOptArgumentCount();
         }
+        return this.minArguments + countOptArgs;
     }
 
     private static String getArgumentWithoutArg(String syntax) {
@@ -143,9 +149,7 @@ public class ArgumentTree {
         int lockIndex = 0;
         for (int index = 0; index < syntax.length(); index++) {
             key = syntax.charAt(index);
-            // if (key != ' ') { // || lockIndex > 0) {
             argument += key;
-            // }
 
             if (key == KEYS_MUST_ARGS.charAt(0) && !mustLocked && !optLocked) {
                 mustLocked = true;
@@ -183,7 +187,7 @@ public class ArgumentTree {
 
             if (key == ' ' && !optLocked && !mustLocked) {
                 argument = argument.replace(" ", "");
-                if (!argument.equalsIgnoreCase(" ")) {
+                if (!argument.equalsIgnoreCase(" ") && !argument.equalsIgnoreCase("")) {
                     arguments.add(argument);
                 }
                 argument = "";
