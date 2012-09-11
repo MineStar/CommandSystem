@@ -11,7 +11,7 @@ import com.bukkit.gemo.utils.UtilPermissions;
 
 import de.minestar.maventest.commandsystem.annotations.Arguments;
 import de.minestar.maventest.commandsystem.annotations.Description;
-import de.minestar.maventest.commandsystem.annotations.Execution;
+import de.minestar.maventest.commandsystem.annotations.ExecuteSuperCommand;
 import de.minestar.maventest.commandsystem.annotations.Label;
 import de.minestar.maventest.commandsystem.annotations.PermissionNode;
 import de.minestar.minestarlibrary.utils.ChatUtils;
@@ -57,7 +57,6 @@ public abstract class AbstractCommand {
         Arguments argumentAnnotation = this.getClass().getAnnotation(Arguments.class);
         PermissionNode nodeAnnotation = this.getClass().getAnnotation(PermissionNode.class);
         Description descriptionAnnotation = this.getClass().getAnnotation(Description.class);
-        Execution executeSuperCommandAnnotation = this.getClass().getAnnotation(Execution.class);
 
         // Save the label. NOTE: If the label is not set, this will throw an RuntimeException and the command won't be registered.
         if (labelAnnotation == null) {
@@ -95,11 +94,7 @@ public abstract class AbstractCommand {
         }
 
         // get the execution-params
-        if (executeSuperCommandAnnotation == null) {
-            this.executeSuperCommand = false;
-        } else {
-            this.executeSuperCommand = executeSuperCommandAnnotation.executeSuperCommand();
-        }
+        this.executeSuperCommand = this.getClass().isAnnotationPresent(ExecuteSuperCommand.class);
 
         // count the arguments for this command
         this.countArguments();
