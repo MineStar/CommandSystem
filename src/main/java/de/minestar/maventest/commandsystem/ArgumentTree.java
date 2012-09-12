@@ -73,39 +73,41 @@ public class ArgumentTree {
         System.out.println("-----------------------------------");
     }
 
-    public boolean validate(String[] arguments) {
+    public boolean validate(ArgumentList argumentList) {
+        //////////////////////////////        
+        // DEBUG        
         if (this.parent == null) {
             String txt = "";
-            for (String t : arguments) {
-                txt += t + " ";
+            for (int i = 0; i < argumentList.length(); i++) {
+                txt += argumentList.getString(i) + " ";
             }
             if (txt.length() > 1) {
                 txt = txt.substring(0, txt.length() - 1);
             }
-            System.out.println("validating input: '" + txt + "' ( COUNT: " + arguments.length + " ) ");
+            System.out.println("validating input: '" + txt + "' ( COUNT: " + argumentList.length() + " ) ");
         }
+        // DEBUG
+        //////////////////////////////
 
-        if (arguments.length < this.getMinArguments() || arguments.length > this.getOptArgumentCount()) {
-            return endless && arguments.length >= this.getMinArguments();
+        if (arguments.length < this.getMinArguments() || argumentList.length() > this.getOptArgumentCount()) {
+            return endless && argumentList.length() >= this.getMinArguments();
         }
 
         int argCount = this.getOptArgumentCount();
 
         ArgumentType type;
         String singleArg, currentArg;
-        for (int index = 0; index < argCount && index < arguments.length; index++) {
+        int newLength = argumentList.length() - 1;
+        for (int index = 0; index < argCount && index < argumentList.length(); index++) {
             type = this.argList.get(index);
             singleArg = this.singleArgs.get(index);
-            currentArg = arguments[index];
+            currentArg = argumentList.getString(index)
             if (type.equals(ArgumentType.OPTIONAL)) {
                 if (this.child != null) {
-                    int newLength = arguments.length - 1;
                     if (newLength < child.getMinArguments() || newLength > child.getOptArgumentCount()) {
                         return false;
                     } else {
-                        String[] newArguments = new String[newLength];
-                        System.arraycopy(arguments, 1, newArguments, 0, newArguments.length);
-                        return child.validate(newArguments);
+                        return child.validate(new ArgumentList(argumentList, 1));
                     }
                 }
             } else {
