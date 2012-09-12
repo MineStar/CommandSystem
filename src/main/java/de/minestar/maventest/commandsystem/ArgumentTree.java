@@ -89,7 +89,7 @@ public class ArgumentTree {
         // DEBUG
         //////////////////////////////
 
-        if (arguments.length < this.getMinArguments() || argumentList.length() > this.getOptArgumentCount()) {
+        if (argumentList.length() < this.getMinArguments() || argumentList.length() > this.getOptArgumentCount()) {
             return endless && argumentList.length() >= this.getMinArguments();
         }
 
@@ -120,6 +120,7 @@ public class ArgumentTree {
         }
         return true;
     }
+    
     public int getMinimalArguments() {
         return minArguments;
     }
