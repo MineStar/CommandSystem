@@ -51,6 +51,16 @@ public class ArgumentList {
     }
 
     /**
+     * Add a count to the offset of the argument list
+     * 
+     * @param offset
+     *            New offset
+     */
+    protected void addOffset(int offset) {
+        this.offset += offset;
+    }
+
+    /**
      * Convert the argument on the position 'index' to a Boolean. When the
      * argument is "0" or "false" it will return Boolean.FALSE. When the
      * argument is "1" or "true" it will return Boolea.TRUE. Otherwise, return

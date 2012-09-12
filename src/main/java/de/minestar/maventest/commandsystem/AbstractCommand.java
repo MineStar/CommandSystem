@@ -27,8 +27,12 @@ public abstract class AbstractCommand {
     private String pluginName;
 
     // vars for the handling of supercommands
-    private boolean superCommand = false; // true = this command has subcommands ; false = this command has no subcommands
-    private boolean executeSuperCommand = false; // true = execute this supercommand ; false = only print the syntax
+    private boolean superCommand = false; // true = this command has subcommands
+                                          // ; false = this command has no
+                                          // subcommands
+    private boolean executeSuperCommand = false; // true = execute this
+                                                 // supercommand ; false = only
+                                                 // print the syntax
 
     // the parent command (null, if this command doesn't have a parent)
     private AbstractCommand parentCommand;
@@ -58,7 +62,8 @@ public abstract class AbstractCommand {
         PermissionNode nodeAnnotation = this.getClass().getAnnotation(PermissionNode.class);
         Description descriptionAnnotation = this.getClass().getAnnotation(Description.class);
 
-        // Save the label. NOTE: If the label is not set, this will throw an RuntimeException and the command won't be registered.
+        // Save the label. NOTE: If the label is not set, this will throw an
+        // RuntimeException and the command won't be registered.
         if (labelAnnotation == null) {
             this.commandLabel = "";
             throw new RuntimeException("Could not create command '" + this.getClass().getSimpleName() + "'! Commandlabel is missing!");
@@ -102,7 +107,8 @@ public abstract class AbstractCommand {
 
     /**
      * @param player
-     * @return True, if the sender has enough permission to use the command Or the permissionnode is empty, so everybody can use it
+     * @return True, if the sender has enough permission to use the command Or
+     *         the permissionnode is empty, so everybody can use it
      */
     private final boolean hasPermission(Player player) {
         return permissionNode.length() == 0 || UtilPermissions.playerCanUseCommand(player, this.getPermissionNode());
@@ -164,13 +170,15 @@ public abstract class AbstractCommand {
     }
 
     /**
-     * This method is automatically called on registration of the command. If we have subcommands, this is the place to register them in our commands.
+     * This method is automatically called on registration of the command. If we
+     * have subcommands, this is the place to register them in our commands.
      */
     protected void createSubCommands() {
     }
 
     /**
-     * This method will initialize the subcommands for this command. This method is automatically called.
+     * This method will initialize the subcommands for this command. This method
+     * is automatically called.
      */
     public final void initializeSubCommands() {
         this.createSubCommands();
@@ -208,7 +216,8 @@ public abstract class AbstractCommand {
     /**
      * Does this command have optional arguments?
      * 
-     * @return <b>true</b> if this command has optional arguments, otherwise <b>false</b>
+     * @return <b>true</b> if this command has optional arguments, otherwise
+     *         <b>false</b>
      */
     public final boolean hasOptionalArguments() {
         return (this.minimumArgumentCount != this.maximumArgumentCount);
@@ -235,7 +244,8 @@ public abstract class AbstractCommand {
     /**
      * Should this Command be executed (only if it is a supercommand)
      * 
-     * @return <b>true</b> if the command should be executed, otherwise <b>false</b>
+     * @return <b>true</b> if the command should be executed, otherwise
+     *         <b>false</b>
      */
     public final boolean isExecuteSuperCommand() {
         return executeSuperCommand;
@@ -244,7 +254,8 @@ public abstract class AbstractCommand {
     /**
      * Is this command a supercommand?
      * 
-     * @return <b>true</b> if the command is a supercommand, <b>false</b> if it is a normal command
+     * @return <b>true</b> if the command is a supercommand, <b>false</b> if it
+     *         is a normal command
      */
     public final boolean isSuperCommand() {
         return superCommand;
@@ -263,7 +274,8 @@ public abstract class AbstractCommand {
     }
 
     /**
-     * Update the subcommands of this command. This method is called automatically.
+     * Update the subcommands of this command. This method is called
+     * automatically.
      */
     public final void updateSubCommands() {
         for (AbstractCommand command : this.subCommands.values()) {
@@ -312,12 +324,14 @@ public abstract class AbstractCommand {
     }
 
     /**
-     * Get the syntax without the arguments (but with all supercommands) for this command.
+     * Get the syntax without the arguments (but with all supercommands) for
+     * this command.
      * 
      * @return the syntax without the arguments, but with all supercommands
      */
     public final String getCommand() {
-        // iterate over every parent and add the label in front of the current syntax
+        // iterate over every parent and add the label in front of the current
+        // syntax
         String syntax = this.getLabel();
         AbstractCommand parent = this.parentCommand;
         while (parent != null) {
@@ -330,10 +344,12 @@ public abstract class AbstractCommand {
     /**
      * Get the complete syntax for this command.
      * 
-     * @return the complete syntax (including supercommands and the argumentstring)
+     * @return the complete syntax (including supercommands and the
+     *         argumentstring)
      */
     public final String getSyntax() {
-        // iterate over every parent and add the label in front of the current syntax
+        // iterate over every parent and add the label in front of the current
+        // syntax
         String syntax = this.getLabel();
         AbstractCommand parent = this.parentCommand;
         while (parent != null) {
@@ -366,7 +382,8 @@ public abstract class AbstractCommand {
      * Register a new subcommand for this command.
      * 
      * @param command
-     * @return <b>true</b> if the command is registered successfully, otherwise <b>false</b>
+     * @return <b>true</b> if the command is registered successfully, otherwise
+     *         <b>false</b>
      */
     protected final boolean registerCommand(AbstractCommand command) {
         // create the map, if it is null
@@ -451,8 +468,12 @@ public abstract class AbstractCommand {
         if (command.isSuperCommand()) {
             // (1)
 
-            // (1.1) -> if we have arguments : copy the array and make the first argument the new label. Then we let the command handle the execution.
-            // (1.2) -> otherwise : we will see if the command should be executed (see annotations) and react to it. We will execute it (1.2.1) or just print the syntax (1.2.2).
+            // (1.1) -> if we have arguments : copy the array and make the first
+            // argument the new label. Then we let the command handle the
+            // execution.
+            // (1.2) -> otherwise : we will see if the command should be
+            // executed (see annotations) and react to it. We will execute it
+            // (1.2.1) or just print the syntax (1.2.2).
             if (arguments.length > 0) {
                 // (1.1)
 
@@ -483,7 +504,9 @@ public abstract class AbstractCommand {
         } else {
             // (2)
 
-            // check the argumentcount to see if the passed argumentcount is correct for this command. Execute the command if it is true (2.1) , otherwise print the syntax (2.2).
+            // check the argumentcount to see if the passed argumentcount is
+            // correct for this command. Execute the command if it is true (2.1)
+            // , otherwise print the syntax (2.2).
 
             // check argumentcount & try to execute it
             if (command.isSyntaxCorrect(arguments)) {

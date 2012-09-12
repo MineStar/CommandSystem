@@ -1,12 +1,13 @@
 package de.minestar.maventest;
 
+import de.minestar.maventest.commandsystem.ArgumentList;
 import de.minestar.maventest.commandsystem.ArgumentTree;
 
 public class Main {
 
     public static void runTest(ArgumentTree argTree, String[] arguments) {
         System.out.println("\n");
-        boolean result = argTree.validate(arguments);
+        boolean result = argTree.validate(new ArgumentList(arguments));
         System.out.println("valid syntax: " + result);
     }
 
@@ -128,8 +129,8 @@ public class Main {
      * @param args
      */
     public static void main(String[] arguments) {
-        // DoTest_1();
-        // DoTest_2();
-        DoTest_3();
+        DoTest_1();
+//         DoTest_2();
+//        DoTest_3();
     }
 }

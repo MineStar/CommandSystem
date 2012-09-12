@@ -16,7 +16,8 @@ public class CommandHandler {
     public HashMap<String, AbstractCommand> registeredCommands;
 
     /**
-     * Constructor. The given pluginname will be used in the registered commands.
+     * Constructor. The given pluginname will be used in the registered
+     * commands.
      * 
      * @param pluginName
      */
@@ -29,7 +30,8 @@ public class CommandHandler {
      * Register a new command
      * 
      * @param command
-     * @return <b>true</b> if the command is registered successfully, otherwise <b>false</b>
+     * @return <b>true</b> if the command is registered successfully, otherwise
+     *         <b>false</b>
      */
     public boolean registerCommand(AbstractCommand command) {
         // set the pluginame
@@ -85,8 +87,12 @@ public class CommandHandler {
         if (command.isSuperCommand()) {
             // (1)
 
-            // (1.1) -> if we have arguments : copy the array and make the first argument the new label. Then we let the command handle the execution.
-            // (1.2) -> otherwise : we will see if the command should be executed (see annotations) and react to it. We will execute it (1.2.1) or just print the syntax (1.2.2).
+            // (1.1) -> if we have arguments : copy the array and make the first
+            // argument the new label. Then we let the command handle the
+            // execution.
+            // (1.2) -> otherwise : we will see if the command should be
+            // executed (see annotations) and react to it. We will execute it
+            // (1.2.1) or just print the syntax (1.2.2).
             if (arguments.length > 0) {
                 // (1.1)
 
@@ -104,7 +110,10 @@ public class CommandHandler {
                 if (command.isExecuteSuperCommand()) {
                     // (1.2.1)
 
-                    // check the argumentcount to see if the passed argumentcount is correct for this command. Execute the command if it is true (2.1) , otherwise print the syntax (2.2).
+                    // check the argumentcount to see if the passed
+                    // argumentcount is correct for this command. Execute the
+                    // command if it is true (2.1) , otherwise print the syntax
+                    // (2.2).
 
                     // check argumentcount & try to execute it
                     if (command.isSyntaxCorrect(arguments)) {
@@ -129,7 +138,9 @@ public class CommandHandler {
         } else {
             // (2)
 
-            // check the argumentcount to see if the passed argumentcount is correct for this command. Execute the command if it is true (2.1) , otherwise print the syntax (2.2).
+            // check the argumentcount to see if the passed argumentcount is
+            // correct for this command. Execute the command if it is true (2.1)
+            // , otherwise print the syntax (2.2).
 
             // check argumentcount & try to execute it
             if (command.isSyntaxCorrect(arguments)) {

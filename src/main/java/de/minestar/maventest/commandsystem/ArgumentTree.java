@@ -74,8 +74,8 @@ public class ArgumentTree {
     }
 
     public boolean validate(ArgumentList argumentList) {
-        //////////////////////////////        
-        // DEBUG        
+        // ////////////////////////////
+        // DEBUG
         if (this.parent == null) {
             String txt = "";
             for (int i = 0; i < argumentList.length(); i++) {
@@ -87,7 +87,7 @@ public class ArgumentTree {
             System.out.println("validating input: '" + txt + "' ( COUNT: " + argumentList.length() + " ) ");
         }
         // DEBUG
-        //////////////////////////////
+        // ////////////////////////////
 
         if (argumentList.length() < this.getMinArguments() || argumentList.length() > this.getOptArgumentCount()) {
             return endless && argumentList.length() >= this.getMinArguments();
@@ -101,13 +101,14 @@ public class ArgumentTree {
         for (int index = 0; index < argCount && index < argumentList.length(); index++) {
             type = this.argList.get(index);
             singleArg = this.singleArgs.get(index);
-            currentArg = argumentList.getString(index)
+            currentArg = argumentList.getString(index);
             if (type.equals(ArgumentType.OPTIONAL)) {
                 if (this.child != null) {
                     if (newLength < child.getMinArguments() || newLength > child.getOptArgumentCount()) {
                         return false;
                     } else {
-                        return child.validate(new ArgumentList(argumentList, 1));
+                        argumentList.addOffset(1);
+                        return child.validate(argumentList);
                     }
                 }
             } else {
@@ -120,7 +121,7 @@ public class ArgumentTree {
         }
         return true;
     }
-    
+
     public int getMinimalArguments() {
         return minArguments;
     }
