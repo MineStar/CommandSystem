@@ -112,10 +112,10 @@ public class SyntaxHelper {
                 return ArgumentType.OPTIONAL;
             }
         } else if (currentIndex >= 0) {
-            if (argument.length() > 0)
+            if (argument.length() > 0) {
                 return ArgumentType.KEYWORD;
+            }
         }
-
-        return ArgumentType.NONE;
+        return ArgumentType.UNKNOWN;
     }
 }

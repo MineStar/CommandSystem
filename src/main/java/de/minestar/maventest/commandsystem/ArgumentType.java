@@ -9,5 +9,5 @@ public enum ArgumentType {
 
     KEYWORD,
 
-    NONE
+    UNKNOWN
 }

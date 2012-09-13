@@ -116,7 +116,7 @@ public abstract class AbstractCommand {
      * @return <b>true</b> if it is correct, otherwise <b>false</b>
      */
     public final boolean isSyntaxCorrect(ArgumentList argumentList) {
-        return this.syntaxTree.validate(argumentList);
+        return this.syntaxTree.checkSyntax(argumentList);
     }
 
     /**

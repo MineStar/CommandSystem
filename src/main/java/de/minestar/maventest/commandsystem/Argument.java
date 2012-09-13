@@ -6,8 +6,12 @@ public class Argument {
     private final ArgumentType type;
 
     public Argument(String argument, ArgumentType type) {
-        this.argument = argument;
         this.type = type;
+        if (this.isKeyword()) {
+            this.argument = "|" + argument.toLowerCase() + "|";
+        } else {
+            this.argument = argument.toLowerCase();
+        }
     }
 
     public String getArgument() {
@@ -28,5 +32,9 @@ public class Argument {
 
     public boolean isNeeded() {
         return type.equals(ArgumentType.NEEDED);
+    }
+
+    public boolean isUnknown() {
+        return type.equals(ArgumentType.UNKNOWN);
     }
 }

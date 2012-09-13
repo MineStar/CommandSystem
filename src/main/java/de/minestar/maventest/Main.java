@@ -7,7 +7,7 @@ public class Main {
 
     public static void runTest(SyntaxTree argTree, String[] arguments) {
         System.out.println("\n");
-        boolean result = argTree.validate(new ArgumentList(arguments));
+        boolean result = argTree.checkSyntax(new ArgumentList(arguments));
         System.out.println("valid syntax: " + result);
     }
 
@@ -130,7 +130,7 @@ public class Main {
      */
     public static void main(String[] arguments) {
         DoTest_1();
-//         DoTest_2();
-//        DoTest_3();
+        DoTest_2();
+        DoTest_3();
     }
 }
