@@ -66,14 +66,7 @@ public class CommandHandler {
             return false;
         }
 
-        // make the label the new first argument
-        String[] newArguments = new String[arguments.length + 1];
-        newArguments[0] = label;
-
-        // add the rest of the arguments to the new array
-        System.arraycopy(arguments, 0, newArguments, 1, newArguments.length - 1);
-
-        command.handleCommand(sender, new ArgumentList(newArguments));
+        command.handleCommand(sender, new ArgumentList(arguments));
         return true;
     }
 

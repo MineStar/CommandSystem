@@ -12,10 +12,10 @@ import de.minestar.maventest.commandsystem.annotations.PermissionNode;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
-@Label(label = "/normal")
-@Arguments(arguments = "<MUST> [<optional>]")
+@Label(label = "/cli")
+@Arguments(arguments = "")
 @PermissionNode(node = "my.node")
-@Description(description = "This is a normal command. It is a single command with 1 needed parameter and 1 optional. The permissionnode is 'my.node'.")
+@Description(description = "This is a normal command. It is a single command without any parameters (like cli). The permissionnode is 'my.node'.")
 public class ClearInventoryCommand extends AbstractCommand {
 
     @Override
@@ -24,7 +24,7 @@ public class ClearInventoryCommand extends AbstractCommand {
         for (String arg : argumentList.getIterator(String.class, 0)) {
             txt += " " + arg;
         }
-        PlayerUtils.sendSuccess(player, "DONE: /normal" + txt);
+        PlayerUtils.sendSuccess(player, "DONE: /cli" + txt);
     }
 
     @Override
@@ -33,6 +33,6 @@ public class ClearInventoryCommand extends AbstractCommand {
         for (String arg : argumentList.getIterator(String.class, 0)) {
             txt += " " + arg;
         }
-        ConsoleUtils.printInfo(pluginName, "DONE: /normal" + txt);
+        ConsoleUtils.printInfo(pluginName, "DONE: /cli" + txt);
     }
 }

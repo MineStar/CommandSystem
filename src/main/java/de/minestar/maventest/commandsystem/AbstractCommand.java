@@ -372,15 +372,15 @@ public abstract class AbstractCommand {
 
     public final boolean handleCommand(CommandSender sender, ArgumentList argumentList) {
         // cast the label to lowercase
-        if (argumentList.length() < 1) {
-            ChatUtils.writeError(sender, pluginName, "Too less arguments (Commandlabel not found)!");
-            return false;
-        }
+//        if (argumentList.length() < 1) {
+//            ChatUtils.writeError(sender, pluginName, "Too less arguments (Commandlabel not found)!");
+//            return false;
+//        }
 
         // lookup a possible subcommand
         AbstractCommand subCommand = null;
-        if (this.subCommands.size() > 0 && argumentList.length() > 1) {
-            subCommand = this.subCommands.get(argumentList.getString(1));
+        if (this.subCommands.size() > 0 && argumentList.length() > 0) {
+            subCommand = this.subCommands.get(argumentList.getString(0));
         }
 
         if (subCommand != null) {
@@ -391,7 +391,7 @@ public abstract class AbstractCommand {
             return subCommand.handleCommand(sender, argumentList);
         } else {
             // get the new argumentlist
-            argumentList = new ArgumentList(argumentList, 1);
+//            argumentList = new ArgumentList(argumentList, 1);
 
             // no subcommand, check syntax and try to execute it
             if (this.isSuperCommand()) {
