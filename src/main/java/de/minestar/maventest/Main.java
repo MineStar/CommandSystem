@@ -12,6 +12,7 @@ public class Main {
     }
 
     public static void DoTest_1() {
+
         System.out.println("--------------------------------------------------------------");
         System.out.println("SYNTAX: " + "<RADIUS> [<PlayerName> [TIME|SINCE <1H2M3S>]]");
         System.out.println("--------------------------------------------------------------");
@@ -140,8 +141,8 @@ public class Main {
      * @param args
      */
     public static void main(String[] arguments) {
-        DoTest_1();
+//        DoTest_1();
         DoTest_2();
-        DoTest_3();
+//        DoTest_3();
     }
 }

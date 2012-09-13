@@ -8,8 +8,9 @@ public class SyntaxTree {
     private ArrayList<Argument> argumentList;
     private int minimumArguments, optionalArguments, maximumArguments;
     private boolean endless = false;
+    private final String syntax;
 
-    // the child
+    // the childtree
     private SyntaxTree childTree;
 
     /**
@@ -18,7 +19,20 @@ public class SyntaxTree {
      * @param syntax
      */
     public SyntaxTree(String syntax) {
-        this.analyzeSyntax(syntax);
+        syntax = syntax.replace("  ", "");
+        if (syntax.startsWith(" ")) {
+            syntax = syntax.substring(1, syntax.length());
+        }
+        if (syntax.endsWith(" ")) {
+            syntax = syntax.substring(0, syntax.length() - 1);
+        }
+
+        this.syntax = syntax;
+        if (SyntaxHelper.isSyntaxValid(this.syntax)) {
+            this.analyzeSyntax();
+        } else {
+            throw new RuntimeException("Syntax '" + syntax + "' is not valid!");
+        }
     }
 
     /**
@@ -27,14 +41,14 @@ public class SyntaxTree {
      * 
      * @param syntax
      */
-    private void analyzeSyntax(String syntax) {
+    private void analyzeSyntax() {
         // create some vars...
         this.minimumArguments = 0;
         this.argumentList = new ArrayList<Argument>();
         String singleArg;
 
         // get all Arguments with the help of the SyntaxHelper-Class
-        ArrayList<String> arguments = SyntaxHelper.getArguments(syntax);
+        ArrayList<String> arguments = SyntaxHelper.getArguments(this.syntax);
 
         // iterate over all arguments...
         for (int index = 0; index < arguments.size(); index++) {

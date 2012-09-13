@@ -14,6 +14,36 @@ public class SyntaxHelper {
     //
     // ///////////////////////////////////////////////////////////////
 
+    public static boolean isSyntaxValid(String syntax) {
+        int mustCount = 0, optCount = 0;
+        char key;
+
+        for (int index = 0; index < syntax.length(); index++) {
+            if (optCount < 0 || mustCount < 0) {
+                return false;
+            }
+
+            key = syntax.charAt(index);
+            if (key == KEYS_MUST_ARGS.charAt(0)) {
+                ++mustCount;
+                continue;
+            }
+            if (key == KEYS_MUST_ARGS.charAt(1)) {
+                --mustCount;
+                continue;
+            }
+            if (key == KEYS_OPT_ARGS.charAt(0)) {
+                ++optCount;
+                continue;
+            }
+            if (key == KEYS_OPT_ARGS.charAt(1)) {
+                --optCount;
+                continue;
+            }
+        }
+        return (optCount == 0 && mustCount == 0);
+    }
+
     /**
      * Remove the syntaxkeys from a given String
      * 
