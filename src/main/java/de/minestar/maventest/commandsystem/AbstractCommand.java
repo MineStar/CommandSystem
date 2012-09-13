@@ -359,7 +359,8 @@ public abstract class AbstractCommand {
      */
     public final void listCommand(CommandSender sender) {
         if (this.isSuperCommand()) {
-            ChatUtils.writeInfo(sender, "Possible Subcommands for: " + this.getSyntax());
+            ChatUtils.writeInfo(sender, "Possible Subcommands for: " + this.getLabel());
+            ChatUtils.writeInfo(sender, this.getSyntax());
         } else {
             ChatUtils.writeInfo(sender, this.getSyntax());
         }
