@@ -6,7 +6,6 @@ public class Argument {
     private final ArgumentType type;
 
     public Argument(String argument, ArgumentType type) {
-        super();
         this.argument = argument;
         this.type = type;
     }
