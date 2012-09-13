@@ -19,7 +19,8 @@ public class SyntaxTree {
      * @param syntax
      */
     public SyntaxTree(String syntax) {
-        syntax = syntax.replace("  ", "");
+        syntax = syntax.replaceAll("   ", " ");
+        syntax = syntax.replaceAll("  ", " ");
         if (syntax.startsWith(" ")) {
             syntax = syntax.substring(1, syntax.length());
         }
