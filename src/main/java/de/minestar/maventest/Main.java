@@ -1,19 +1,19 @@
 package de.minestar.maventest;
 
 import de.minestar.maventest.commandsystem.ArgumentList;
-import de.minestar.maventest.commandsystem.ArgumentTree;
+import de.minestar.maventest.commandsystem.SyntaxTree;
 
 public class Main {
 
-    public static void runTest(ArgumentTree argTree, String[] arguments) {
+    public static void runTest(SyntaxTree argTree, String[] arguments) {
         System.out.println("\n");
         boolean result = argTree.validate(new ArgumentList(arguments));
         System.out.println("valid syntax: " + result);
     }
 
     public static void DoTest_1() {
-        ArgumentTree argTree;
-        argTree = new ArgumentTree("<RADIUS> [<PlayerName> [TIME|SINCE <1H2M3S>]]");
+        SyntaxTree argTree;
+        argTree = new SyntaxTree("<RADIUS> [<PlayerName> [TIME|SINCE <1H2M3S>]]");
 
         String[] args;
 
@@ -65,8 +65,8 @@ public class Main {
     }
 
     public static void DoTest_2() {
-        ArgumentTree argTree;
-        argTree = new ArgumentTree("<PlayerName> [PlayerName ...] ");
+        SyntaxTree argTree;
+        argTree = new SyntaxTree("<PlayerName> [PlayerName ...] ");
 
         String[] args;
 
@@ -92,8 +92,8 @@ public class Main {
     }
 
     public static void DoTest_3() {
-        ArgumentTree argTree;
-        argTree = new ArgumentTree("<RADIUS> [<PlayerName> [<PlayerName>]] ");
+        SyntaxTree argTree;
+        argTree = new SyntaxTree("<RADIUS> [<PlayerName> [<PlayerName>]] ");
 
         String[] args;
 

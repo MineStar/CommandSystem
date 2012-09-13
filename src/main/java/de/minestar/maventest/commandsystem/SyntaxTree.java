@@ -2,20 +2,20 @@ package de.minestar.maventest.commandsystem;
 
 import java.util.ArrayList;
 
-public class ArgumentTree {
+public class SyntaxTree {
     private static String KEYS_MUST_ARGS = "<>";
     private static String KEYS_OPT_ARGS = "[]";
     private static String KEYS_INF_ARG = "...";
 
     private int minArguments, countOptArgs, maxArguments;
     private boolean endless = false;
-    private ArgumentTree child;
+    private SyntaxTree child;
     private final String syntax;
 
     private ArrayList<ArgumentType> argList;
     private ArrayList<String> singleArgs;
 
-    public ArgumentTree(String syntax) {
+    public SyntaxTree(String syntax) {
         this.syntax = syntax;
         this.prepareSyntax();
     }
@@ -43,7 +43,7 @@ public class ArgumentTree {
             }
             if (argType.equals(ArgumentType.OPTIONAL)) {
                 ++countOptArgs;
-                this.child = new ArgumentTree(getArgumentWithoutArg(singleArg));
+                this.child = new SyntaxTree(getArgumentWithoutArg(singleArg));
                 break;
             } else if (argType.equals(ArgumentType.ENDLESS)) {
                 endless = true;

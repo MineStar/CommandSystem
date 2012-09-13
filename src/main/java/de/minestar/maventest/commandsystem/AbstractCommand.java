@@ -43,7 +43,7 @@ public abstract class AbstractCommand {
 
     // list of subcommands
     public HashMap<String, AbstractCommand> subCommands = new HashMap<String, AbstractCommand>();
-    private ArgumentTree argumentTree;
+    private SyntaxTree syntaxTree;
 
     /**
      * Constructor
@@ -80,7 +80,7 @@ public abstract class AbstractCommand {
         } else {
             this.arguments = argumentAnnotation.arguments();
         }
-        this.argumentTree = new ArgumentTree(this.arguments);
+        this.syntaxTree = new SyntaxTree(this.arguments);
 
         // get the permissionnode
         if (nodeAnnotation == null) {
@@ -116,7 +116,7 @@ public abstract class AbstractCommand {
      * @return <b>true</b> if it is correct, otherwise <b>false</b>
      */
     public final boolean isSyntaxCorrect(ArgumentList argumentList) {
-        return this.argumentTree.validate(argumentList);
+        return this.syntaxTree.validate(argumentList);
     }
 
     /**
