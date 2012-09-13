@@ -47,7 +47,7 @@ public class SyntaxTree {
                 }
                 spaces += "^";
                 message += spaces;
-                message += "\nReason: " + result.getReason() + "\n";
+                message += "\nReason:\n" + result.getReason() + "\n";
             }
             throw new RuntimeException(message);
         }
