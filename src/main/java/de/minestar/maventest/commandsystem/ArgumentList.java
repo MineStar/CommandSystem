@@ -1,6 +1,7 @@
 package de.minestar.maventest.commandsystem;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -18,8 +19,26 @@ public class ArgumentList {
      *            The arguments from the command
      */
     public ArgumentList(Object[] args) {
-        this.args = args;
+        this.args = filterArguments(args);
         this.offset = 0;
+    }
+
+    /**
+     * Filter all empty arguments to prevent errors with empty strings
+     * 
+     * @param args
+     *            The origin argument array
+     * @return The filtered origin argument array
+     */
+    private Object[] filterArguments(Object[] args) {
+        ArrayList<Object> newArgs = new ArrayList<Object>(args.length);
+        for (Object object : args) {
+            // FILTER EMPTY STRINGS
+            if (!object.toString().isEmpty())
+                newArgs.add(object);
+        }
+
+        return (Object[]) newArgs.toArray(new Object[newArgs.size()]);
     }
 
     /**
