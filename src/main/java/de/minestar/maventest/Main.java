@@ -141,8 +141,8 @@ public class Main {
      * @param args
      */
     public static void main(String[] arguments) {
-//        DoTest_1();
+        DoTest_1();
         DoTest_2();
-//        DoTest_3();
+        DoTest_3();
     }
 }

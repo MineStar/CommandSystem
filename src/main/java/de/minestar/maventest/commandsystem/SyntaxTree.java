@@ -28,10 +28,27 @@ public class SyntaxTree {
         }
 
         this.syntax = syntax;
-        if (SyntaxHelper.isSyntaxValid(this.syntax)) {
+        this.validateSyntax();
+    }
+
+    private void validateSyntax() {
+        SyntaxValidationResult result = SyntaxHelper.isSyntaxValid(this.syntax);
+        if (result.getErrorIndex() == -1) {
             this.analyzeSyntax();
         } else {
-            throw new RuntimeException("Syntax '" + syntax + "' is not valid!");
+            String message = "\n\nSyntax '" + syntax + "' is not valid!\n";
+            if (result.getErrorIndex() == Integer.MAX_VALUE) {
+                message += result.getReason();
+            } else {
+                String spaces = "";
+                for (int i = 0; i < result.getErrorIndex() + ("Syntax '").length(); i++) {
+                    spaces += " ";
+                }
+                spaces += "^";
+                message += spaces;
+                message += "\nReason: " + result.getReason() + "\n";
+            }
+            throw new RuntimeException(message);
         }
     }
 

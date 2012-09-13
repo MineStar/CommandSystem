@@ -14,34 +14,58 @@ public class SyntaxHelper {
     //
     // ///////////////////////////////////////////////////////////////
 
-    public static boolean isSyntaxValid(String syntax) {
+    public static SyntaxValidationResult isSyntaxValid(String syntax) {
         int mustCount = 0, optCount = 0;
+        boolean mustOpen = false;
         char key;
+        int lastOpenIndex = -1;
 
         for (int index = 0; index < syntax.length(); index++) {
             if (optCount < 0 || mustCount < 0) {
-                return false;
+                return new SyntaxValidationResult("Statement is closed, before it is opened!", index);
             }
 
             key = syntax.charAt(index);
             if (key == KEYS_MUST_ARGS.charAt(0)) {
+                if (mustOpen) {
+                    return new SyntaxValidationResult("Needed statement is already opened!", index);
+                }
                 ++mustCount;
+                mustOpen = true;
+                lastOpenIndex = index;
                 continue;
             }
             if (key == KEYS_MUST_ARGS.charAt(1)) {
                 --mustCount;
+                mustOpen = false;
+                if (lastOpenIndex + 1 == index) {
+                    return new SyntaxValidationResult("Needed statement is empty!", index);
+                }
                 continue;
             }
             if (key == KEYS_OPT_ARGS.charAt(0)) {
+                if (mustOpen) {
+                    return new SyntaxValidationResult("Needed statement is still opened!", index);
+                }
                 ++optCount;
+                lastOpenIndex = index;
                 continue;
             }
             if (key == KEYS_OPT_ARGS.charAt(1)) {
+                if (mustOpen || lastOpenIndex + 1 == index) {
+                    return new SyntaxValidationResult("Needed statement is still opened!", index);
+                } else if (lastOpenIndex + 1 == index) {
+                    return new SyntaxValidationResult("Optional statement is still empty!", index);
+                }
                 --optCount;
                 continue;
             }
+            lastOpenIndex = -1;
         }
-        return (optCount == 0 && mustCount == 0);
+        if (optCount != 0 || mustCount != 0) {
+            return new SyntaxValidationResult("Statements are not closed properly!", Integer.MAX_VALUE);
+        }
+        return new SyntaxValidationResult("OK", -1);
     }
 
     /**
