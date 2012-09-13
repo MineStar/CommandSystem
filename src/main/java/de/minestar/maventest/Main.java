@@ -8,7 +8,7 @@ public class Main {
     public static void runTest(SyntaxTree argTree, String[] arguments) {
         boolean result = argTree.checkSyntax(new ArgumentList(arguments));
         System.out.println(new ArgumentList(arguments).toString());
-        System.out.println("valid syntax: " + result + "\n");
+        System.out.println("valid: " + result + "\n");
     }
 
     public static void DoTest_1() {
