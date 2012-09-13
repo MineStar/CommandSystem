@@ -27,11 +27,6 @@ public class ArgumentTree {
     }
 
     private void prepareSyntax() {
-        if (this.parent == null) {
-            System.out.println("------------------------------------------");
-            System.out.println("ANALYZING: " + syntax);
-            System.out.println("------------------------------------------");
-        }
         this.minArguments = 0;
         this.maxArguments = 0;
         this.argList = new ArrayList<ArgumentType>();
@@ -55,7 +50,6 @@ public class ArgumentTree {
                 ++this.minArguments;
             }
             if (argType.equals(ArgumentType.OPTIONAL)) {
-                // String arg = getArgumentWithoutArg(singleArg);
                 ++countOptArgs;
                 this.child = new ArgumentTree(this, getArgumentWithoutArg(singleArg));
                 break;
@@ -66,34 +60,14 @@ public class ArgumentTree {
                 break;
             }
         }
-
-        System.out.println("result: " + syntax + " -> " + this.getMinArguments() + " / " + this.getOptArgumentCount());
-        System.out.println("Types: " + this.argList.toString().substring(1, this.argList.toString().length() - 1));
-        System.out.println("SingleArgs: " + this.singleArgs.toString().substring(1, this.singleArgs.toString().length() - 1));
-        System.out.println("-----------------------------------");
     }
 
     public boolean validate(ArgumentList argumentList) {
-        // ////////////////////////////
-        // DEBUG
-        if (this.parent == null) {
-            String txt = "";
-            for (int i = 0; i < argumentList.length(); i++) {
-                txt += argumentList.getString(i) + " ";
-            }
-            if (txt.length() > 1) {
-                txt = txt.substring(0, txt.length() - 1);
-            }
-            System.out.println("validating input: '" + txt + "' ( COUNT: " + argumentList.length() + " ) ");
-        }
-        // DEBUG
-        // ////////////////////////////
-
-        if (argumentList.length() < this.getMinArguments() || argumentList.length() > this.getOptArgumentCount()) {
+        if (argumentList.length() < this.getMinArguments() || argumentList.length() > this.getMaxArgumentCount()) {
             return endless && argumentList.length() >= this.getMinArguments();
         }
 
-        int argCount = this.getOptArgumentCount();
+        int argCount = this.getMaxArgumentCount();
 
         ArgumentType type;
         String singleArg, currentArg;
@@ -104,11 +78,10 @@ public class ArgumentTree {
             currentArg = argumentList.getString(index);
             if (type.equals(ArgumentType.OPTIONAL)) {
                 if (this.child != null) {
-                    if (newLength < child.getMinArguments() || newLength > child.getOptArgumentCount()) {
+                    if (newLength < child.getMinArguments() || newLength > child.getMaxArgumentCount()) {
                         return false;
                     } else {
-                        argumentList.addOffset(1);
-                        return child.validate(argumentList);
+                        return child.validate(new ArgumentList(argumentList, 1));
                     }
                 }
             } else {
@@ -122,10 +95,6 @@ public class ArgumentTree {
         return true;
     }
 
-    public int getMinimalArguments() {
-        return minArguments;
-    }
-
     public int getMinArguments() {
         if (this.parent != null) {
             return minArguments;
@@ -133,9 +102,9 @@ public class ArgumentTree {
         return minArguments;
     }
 
-    public int getOptArgumentCount() {
+    public int getMaxArgumentCount() {
         if (child != null) {
-            return countOptArgs + child.getOptArgumentCount();
+            return countOptArgs + child.getMaxArgumentCount();
         }
         return this.minArguments + countOptArgs;
     }

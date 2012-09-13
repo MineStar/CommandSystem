@@ -24,7 +24,7 @@ public abstract class AbstractCommand {
     public final static String NO_PERMISSION = "Du darfst dieses Kommando nicht benutzen!";
 
     // the pluginName (for easier use with ConsoleUtils/PlayerUtils)
-    private String pluginName;
+    protected String pluginName;
 
     // vars for the handling of supercommands
     private boolean superCommand = false; // true = this command has subcommands
@@ -37,16 +37,13 @@ public abstract class AbstractCommand {
     // the parent command (null, if this command doesn't have a parent)
     private AbstractCommand parentCommand;
 
-    // argumentcounts
-    private int minimumArgumentCount = -1;
-    private int maximumArgumentCount = -1;
-
     // needed vars for each command
     private final String commandLabel;
     private String arguments, permissionNode, description;
 
     // list of subcommands
-    public HashMap<String, AbstractCommand> subCommands;
+    public HashMap<String, AbstractCommand> subCommands = new HashMap<String, AbstractCommand>();
+    private ArgumentTree argumentTree;
 
     /**
      * Constructor
@@ -83,6 +80,7 @@ public abstract class AbstractCommand {
         } else {
             this.arguments = argumentAnnotation.arguments();
         }
+        this.argumentTree = new ArgumentTree(this.arguments);
 
         // get the permissionnode
         if (nodeAnnotation == null) {
@@ -100,9 +98,6 @@ public abstract class AbstractCommand {
 
         // get the execution-params
         this.executeSuperCommand = this.getClass().isAnnotationPresent(ExecuteSuperCommand.class);
-
-        // count the arguments for this command
-        this.countArguments();
     }
 
     /**
@@ -120,8 +115,8 @@ public abstract class AbstractCommand {
      * @param arguments
      * @return <b>true</b> if it is correct, otherwise <b>false</b>
      */
-    public final boolean isSyntaxCorrect(String[] arguments) {
-        return (!this.hasOptionalArguments() && arguments.length == this.getMinimumArgumentCount()) || (this.hasOptionalArguments() && arguments.length >= this.getMinimumArgumentCount() && arguments.length <= this.getMaximumArgumentCount());
+    public final boolean isSyntaxCorrect(ArgumentList argumentList) {
+        return this.argumentTree.validate(argumentList);
     }
 
     /**
@@ -130,7 +125,7 @@ public abstract class AbstractCommand {
      * @param sender
      * @param arguments
      */
-    public final void run(CommandSender sender, String[] arguments) {
+    public final void run(CommandSender sender, ArgumentList argumentList) {
         if (sender instanceof Player) {
             // get the player
             Player player = (Player) sender;
@@ -142,10 +137,10 @@ public abstract class AbstractCommand {
             }
 
             // execute the command for a player
-            this.execute(player, arguments);
+            this.execute(player, argumentList);
         } else {
             // execute the command for the console
-            this.execute((ConsoleCommandSender) sender, arguments);
+            this.execute((ConsoleCommandSender) sender, argumentList);
         }
     }
 
@@ -155,7 +150,7 @@ public abstract class AbstractCommand {
      * @param console
      * @param arguments
      */
-    public void execute(Player player, String[] arguments) {
+    public void execute(Player player, ArgumentList argumentList) {
         ConsoleUtils.printError(pluginName, "Das Kommando '" + this.getSyntax() + "' kann nicht von einem Spieler ausgeführt werden!");
     }
 
@@ -165,7 +160,7 @@ public abstract class AbstractCommand {
      * @param console
      * @param arguments
      */
-    public void execute(ConsoleCommandSender console, String[] arguments) {
+    public void execute(ConsoleCommandSender console, ArgumentList argumentList) {
         ConsoleUtils.printError(pluginName, "Das Kommando '" + this.getSyntax() + "' kann nicht von der Konsole ausgeführt werden!");
     }
 
@@ -182,63 +177,7 @@ public abstract class AbstractCommand {
      */
     public final void initializeSubCommands() {
         this.createSubCommands();
-        if (this.subCommands != null) {
-            this.superCommand = (this.subCommands.size() > 0);
-        } else {
-            this.superCommand = false;
-        }
-    }
-
-    /**
-     * Method to count the arguments for the commands syntax.
-     */
-    private final void countArguments() {
-        if (this.minimumArgumentCount != -1 && this.maximumArgumentCount != -1) {
-            return;
-        }
-        this.minimumArgumentCount = 0;
-        this.maximumArgumentCount = 0;
-        char key;
-        // iterate over the string
-        for (int i = 0; i < this.arguments.length(); ++i) {
-            key = this.arguments.charAt(i);
-            if (key == '<') {
-                // we have an '<' : this is a needed parameter
-                ++this.minimumArgumentCount;
-                ++this.maximumArgumentCount;
-            } else if (key == '[') {
-                // we have an '[' : this is an optional parameter
-                ++this.maximumArgumentCount;
-            }
-        }
-    }
-
-    /**
-     * Does this command have optional arguments?
-     * 
-     * @return <b>true</b> if this command has optional arguments, otherwise
-     *         <b>false</b>
-     */
-    public final boolean hasOptionalArguments() {
-        return (this.minimumArgumentCount != this.maximumArgumentCount);
-    }
-
-    /**
-     * Get the minimum argumentcount
-     * 
-     * @return the minimum argumentcount
-     */
-    public final int getMinimumArgumentCount() {
-        return minimumArgumentCount;
-    }
-
-    /**
-     * Get the maximum argumentcount
-     * 
-     * @return the maximum argumentcount
-     */
-    public final int getMaximumArgumentCount() {
-        return maximumArgumentCount;
+        this.superCommand = (this.subCommands.size() > 0);
     }
 
     /**
@@ -419,108 +358,83 @@ public abstract class AbstractCommand {
      * List the command
      */
     public final void listCommand(CommandSender sender) {
-        ChatUtils.writeInfo(sender, this.pluginName, this.getSyntax());
+        if (this.isSuperCommand()) {
+            ChatUtils.writeInfo(sender, "Possible Subcommands for: " + this.getSyntax());
+        } else {
+            ChatUtils.writeInfo(sender, this.getSyntax());
+        }
+
         ArrayList<AbstractCommand> subCommands = getSubCommands();
         for (AbstractCommand subCommand : subCommands) {
             ChatUtils.writeInfo(sender, this.pluginName, subCommand.getSyntax());
         }
     }
 
-    public final boolean handleCommand(CommandSender sender, String label, String[] arguments) {
+    public final boolean handleCommand(CommandSender sender, ArgumentList argumentList) {
         // cast the label to lowercase
-        label = label.toLowerCase();
+        if (argumentList.length() < 1) {
+            ChatUtils.writeError(sender, pluginName, "Too less arguments (No label found)!");
+            return false;
+        }
 
-        // lookup the command
-        AbstractCommand command = this.subCommands.get(label);
-        if (command == null) {
-            if (this.isExecuteSuperCommand()) {
-                // make the label the new first argument
-                String[] newArguments = new String[arguments.length + 1];
-                newArguments[0] = label;
+        // lookup a possible subcommand
+        AbstractCommand subCommand = null;
+        if (this.subCommands.size() > 0 && argumentList.length() > 1) {
+            subCommand = this.subCommands.get(argumentList.getString(1));
+        }
 
-                // add the rest of the arguments to the new array
-                System.arraycopy(arguments, 0, newArguments, 1, newArguments.length - 1);
+        if (subCommand != null) {
+            // we have a subcommand, so handle it
+
+            // get the new argumentlist
+            argumentList = new ArgumentList(argumentList, 1);
+            return subCommand.handleCommand(sender, argumentList);
+        } else {
+            // get the new argumentlist
+            argumentList = new ArgumentList(argumentList, 1);
+
+            // no subcommand, check syntax and try to execute it
+            if (this.isSuperCommand()) {
+                if (this.isExecuteSuperCommand()) {
+                    // we have a supercommand that should be executed
+
+                    // check argumentcount & try to execute it
+                    if (this.isSyntaxCorrect(argumentList)) {
+                        // (2.1)
+
+                        // execute the command
+                        this.run(sender, argumentList);
+                        return true;
+                    } else {
+                        // (2.2)
+
+                        // print the syntax
+                        this.printWrongSyntax(sender);
+                        return false;
+                    }
+                } else {
+                    // print the syntax
+                    this.listCommand(sender);
+                    return false;
+                }
+            } else {
+                // NO SUPER COMMAND, JUST TRY TO EXECUTE
 
                 // check argumentcount & try to execute it
-                if (this.isSyntaxCorrect(newArguments)) {
+                if (this.isSyntaxCorrect(argumentList)) {
                     // (2.1)
 
                     // execute the command
-                    this.run(sender, newArguments);
+                    this.run(sender, argumentList);
+                    return true;
                 } else {
                     // (2.2)
 
                     // print the syntax
                     this.printWrongSyntax(sender);
-                }
-                // this.execute(newArguments);
-                return true;
-            } else {
-                // print the syntax
-                this.listCommand(sender);
-                return false;
-            }
-        }
-
-        // (1) : we have a supercommand
-        // (2) : We have a normal command
-
-        if (command.isSuperCommand()) {
-            // (1)
-
-            // (1.1) -> if we have arguments : copy the array and make the first
-            // argument the new label. Then we let the command handle the
-            // execution.
-            // (1.2) -> otherwise : we will see if the command should be
-            // executed (see annotations) and react to it. We will execute it
-            // (1.2.1) or just print the syntax (1.2.2).
-            if (arguments.length > 0) {
-                // (1.1)
-
-                // make the first argument the label
-                label = arguments[0];
-
-                // copy the rest of the arguments to a new array
-                String[] newArguments = new String[arguments.length - 1];
-                System.arraycopy(arguments, 1, newArguments, 0, newArguments.length);
-
-                // handle the command
-                command.handleCommand(sender, label, newArguments);
-            } else {
-                // (1.2)
-                if (command.isExecuteSuperCommand()) {
-                    // (1.2.1)
-
-                    // execute the command
-                    command.run(sender, arguments);
-                } else {
-                    // (1.2.2)
-
-                    // print the syntax
-                    command.listCommand(sender);
+                    return false;
                 }
             }
-            return true;
-        } else {
-            // (2)
-
-            // check the argumentcount to see if the passed argumentcount is
-            // correct for this command. Execute the command if it is true (2.1)
-            // , otherwise print the syntax (2.2).
-
-            // check argumentcount & try to execute it
-            if (command.isSyntaxCorrect(arguments)) {
-                // (2.1)
-
-                // execute the command
-                command.run(sender, arguments);
-            } else {
-                // (2.2)
-
-                // print the syntax
-                command.printWrongSyntax(sender);
-            }
-            return true;
         }
     }
 }

@@ -12,11 +12,11 @@ import de.minestar.maventest.commandsystem.annotations.PermissionNode;
 import de.minestar.minestarlibrary.utils.ConsoleUtils;
 import de.minestar.minestarlibrary.utils.PlayerUtils;
 
-@Label(label = "/cli")
-@Arguments(arguments = "")
-@PermissionNode(node = "my.node")
-@Description(description = "This is a normal command. It is a single command without any parameters (like cli). The permissionnode is 'my.node'.")
-public class NormalCommandExample extends AbstractCommand {
+@Label(label = "create")
+@Arguments(arguments = "<Warpname>")
+@PermissionNode(node = "test.node")
+@Description(description = "This is a subcommand. It is a subcommand of '/tr' command with 2 needed parameters and 1 optional. The permissionnode is 'test.node'")
+public class WarpCreateCommand extends AbstractCommand {
 
     @Override
     public void execute(Player player, ArgumentList argumentList) {
@@ -24,7 +24,8 @@ public class NormalCommandExample extends AbstractCommand {
         for (String arg : argumentList.getIterator(String.class, 0)) {
             txt += " " + arg;
         }
-        PlayerUtils.sendSuccess(player, "DONE: /cli" + txt);
+
+        PlayerUtils.sendSuccess(player, "DONE: /warp create" + txt);
     }
 
     @Override
@@ -33,6 +34,7 @@ public class NormalCommandExample extends AbstractCommand {
         for (String arg : argumentList.getIterator(String.class, 0)) {
             txt += " " + arg;
         }
-        ConsoleUtils.printInfo(pluginName, "DONE: /cli" + txt);
+
+        ConsoleUtils.printInfo(pluginName, "DONE: /warp create" + txt);
     }
 }

@@ -6,6 +6,15 @@ commands:
   warp:
     description: Remove a protection
     usage: /warp
+  tr:
+    description: Remove a protection
+    usage: /tr
   normal:
+    description: Get some information about a protection
+    usage: /normal
+  cli:
+    description: Get some information about a protection
+    usage: /normal
+  flash:
     description: Get some information about a protection
     usage: /normal

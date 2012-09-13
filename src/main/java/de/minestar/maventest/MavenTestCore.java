@@ -6,8 +6,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import de.minestar.maventest.commands.ClearInventoryCommand;
+import de.minestar.maventest.commands.FlashCommand;
 import de.minestar.maventest.commands.NormalCommandExample;
-import de.minestar.maventest.commands.WarpCommandExample;
+import de.minestar.maventest.commands.TheRockCommand;
+import de.minestar.maventest.commands.WarpCommand;
 import de.minestar.maventest.commandsystem.AbstractCommand;
 import de.minestar.maventest.commandsystem.CommandHandler;
 
@@ -24,14 +27,16 @@ public class MavenTestCore extends JavaPlugin {
         commandHandler = new CommandHandler(NAME);
 
         try {
-            this.registerCommand(new WarpCommandExample());
+            this.registerCommand(new WarpCommand());
             this.registerCommand(new NormalCommandExample());
+            this.registerCommand(new TheRockCommand());
+            this.registerCommand(new ClearInventoryCommand());
+            this.registerCommand(new FlashCommand());
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
 
-        this.listCommands(Bukkit.getConsoleSender());
         return true;
     }
 

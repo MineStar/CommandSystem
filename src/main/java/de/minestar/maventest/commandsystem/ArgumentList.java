@@ -23,6 +23,18 @@ public class ArgumentList {
     }
 
     /**
+     * Create a ArgumentList holding an reference on the object array. You can
+     * get all elements in the object
+     * 
+     * @param args
+     *            The arguments from the command
+     */
+    public ArgumentList(ArgumentList argumentList, int offset) {
+        this.args = argumentList.args;
+        this.offset = argumentList.offset + offset;
+    }
+
+    /**
      * The length of the argument list. It is the length of the array minus the
      * offset
      * 
@@ -38,26 +50,6 @@ public class ArgumentList {
      */
     public boolean isEmpty() {
         return length() <= 0;
-    }
-
-    /**
-     * Set the beginning of the argument list
-     * 
-     * @param offset
-     *            New offset
-     */
-    protected void setOffset(int offset) {
-        this.offset = offset;
-    }
-
-    /**
-     * Add a count to the offset of the argument list
-     * 
-     * @param offset
-     *            New offset
-     */
-    protected void addOffset(int offset) {
-        this.offset += offset;
     }
 
     /**
@@ -383,7 +375,7 @@ public class ArgumentList {
         private Class<T> clazz;
 
         public ArgumentIterator(Class<T> clazz, int index) {
-            this.index = index + offset;
+            this.index = index;
             this.clazz = clazz;
         }
 

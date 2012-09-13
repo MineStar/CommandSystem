@@ -13,7 +13,7 @@ public class Main {
 
     public static void DoTest_1() {
         ArgumentTree argTree;
-        argTree = new ArgumentTree("<RADIUS> [<PlayerName> [TIME|SINCE <1H2M3S>]] ");
+        argTree = new ArgumentTree("<RADIUS> [<PlayerName> [TIME|SINCE <1H2M3S>]]");
 
         String[] args;
 
