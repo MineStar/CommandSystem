@@ -4,9 +4,10 @@ import java.util.ArrayList;
 
 public class SyntaxHelper {
 
-    private static String KEYS_MUST_ARGS = "<>";
-    private static String KEYS_OPT_ARGS = "[]";
-    private static String KEYS_INF_ARG = "...";
+    // init vars
+    private static final String KEYS_MUST_ARGS = "<>";
+    private static final String KEYS_OPT_ARGS = "[]";
+    private static final String KEYS_INF_ARG = "...";
 
     // ///////////////////////////////////////////////////////////////
     //
@@ -14,76 +15,136 @@ public class SyntaxHelper {
     //
     // ///////////////////////////////////////////////////////////////
 
+    /**
+     * This method is used to validate a syntaxstring
+     * 
+     * @param syntax
+     * @return a SyntaxValidationResult with all needed infos
+     */
     public static SyntaxValidationResult isSyntaxValid(String syntax) {
-        int mustCount = 0, optCount = 0;
-        boolean mustOpen = false;
+        // create some vars...
+        int neededArgumentCount = 0, optionalArgumentCount = 0;
+        boolean neededArgumentOpen = false;
         char key;
         int lastOpenIndex = -1;
 
+        // iterate over every char...
         for (int index = 0; index < syntax.length(); index++) {
-            if (mustCount < 0) {
+            // is neededArgumentCount OR optionalArgumentCount < 0 => return
+            // with errormessage,
+            // this means that there is a close-statement without an
+            // opening-statement in front of it
+            if (neededArgumentCount < 0) {
                 return new SyntaxValidationResult("Needed statement is closed, before it is opened!", index - 1);
             }
-            if (optCount < 0) {
+            if (optionalArgumentCount < 0) {
                 return new SyntaxValidationResult("Optional statement is closed, before it is opened!", index - 1);
             }
 
+            // get the current char
             key = syntax.charAt(index);
+
+            // is the char an opener for a needed arguments?
             if (key == KEYS_MUST_ARGS.charAt(0)) {
-                if (mustOpen) {
+                // we cannot nest needed arguments into needed arguments
+                if (neededArgumentOpen) {
                     return new SyntaxValidationResult("Needed statement is already opened!", index);
                 }
-                ++mustCount;
-                mustOpen = true;
+                ++neededArgumentCount;
+                neededArgumentOpen = true;
                 lastOpenIndex = index;
                 continue;
             }
+
+            // is the char an quitter for a needed arguments?
             if (key == KEYS_MUST_ARGS.charAt(1)) {
-                --mustCount;
-                mustOpen = false;
+                --neededArgumentCount;
+                neededArgumentOpen = false;
+                // is the argument at least 1 char long?
                 if (lastOpenIndex + 1 == index) {
                     return new SyntaxValidationResult("Needed statement is empty!", index);
                 }
                 continue;
             }
+
+            // is the char an opener for an optional arguments?
             if (key == KEYS_OPT_ARGS.charAt(0)) {
-                if (mustOpen) {
+                // we cannot nest optional arguments into needed arguments
+                if (neededArgumentOpen) {
                     return new SyntaxValidationResult("Needed statement is still opened!", index);
                 }
-                ++optCount;
+                ++optionalArgumentCount;
                 lastOpenIndex = index;
                 continue;
             }
+
+            // is the char an quitter for an optional arguments?
             if (key == KEYS_OPT_ARGS.charAt(1)) {
-                if (mustOpen) {
+                // needed statements must be closed first, otherwise constructs
+                // like [<] would be possible
+                if (neededArgumentOpen) {
                     return new SyntaxValidationResult("Needed statement is still opened!", index);
-                } else if (lastOpenIndex + 1 == index) {
+                }
+                // is the argument at least 1 char long?
+                if (lastOpenIndex + 1 == index) {
                     return new SyntaxValidationResult("Optional statement is still empty!", index);
                 }
-                --optCount;
+                --optionalArgumentCount;
                 continue;
             }
             lastOpenIndex = -1;
         }
-        if (optCount != 0 || mustCount != 0) {
+        // are all statements closed correct?
+        if (optionalArgumentCount != 0 || neededArgumentCount != 0) {
             return new SyntaxValidationResult("Statements are not closed properly!", Integer.MAX_VALUE);
         }
         return new SyntaxValidationResult("OK", -1);
     }
 
     /**
-     * Remove the syntaxkeys from a given String
+     * Remove the optional syntaxkeys from a given String
      * 
      * @param syntax
      * @return Return the syntax without the syntaxkeys.<br />
      *         <b>Example:</b><br />
      *         [<Player> [Player...]] => <Player> [Player]
      */
-    public static String removeSyntaxKeys(String syntax) {
-        if (syntax.startsWith(" ")) {
-            syntax = syntax.substring(1, syntax.length() - 1);
+    public static String removeOptionalSyntaxKeys(String syntax) {
+        int startIndex = -1, endIndex = -1;
+        char key;
+
+        // get first "["
+        for (int index = 0; index < syntax.length(); index++) {
+            key = syntax.charAt(index);
+            if (key == KEYS_OPT_ARGS.charAt(0)) {
+                startIndex = index + 1;
+                break;
+            }
         }
-        return syntax.substring(1, syntax.length() - 1);
+
+        // get last "]"
+        for (int index = syntax.length() - 1; index >= 0; index++) {
+            key = syntax.charAt(index);
+            if (key == KEYS_OPT_ARGS.charAt(1)) {
+                endIndex = index;
+                break;
+            }
+        }
+
+        // cut off
+        if (startIndex < endIndex && startIndex != -1 && endIndex != -1) {
+            String substring = syntax.substring(startIndex, endIndex);
+            if (substring.startsWith(" ")) {
+                substring = substring.substring(1);
+            }
+            if (substring.endsWith(" ")) {
+                substring = substring.substring(0, substring.length() - 1);
+            }
+            return substring;
+        }
+
+        // return the complete syntax
+        return syntax;
     }
 
     /**
@@ -93,20 +154,26 @@ public class SyntaxHelper {
      * @return All arguments for a given Syntax
      */
     public static ArrayList<String> getArguments(String syntax) {
-        ArrayList<String> arguments = new ArrayList<String>();
+        // create some vars...
         char key;
         String argument = "";
+        ArrayList<String> arguments = new ArrayList<String>();
         boolean mustLocked = false, optLocked = false;
         int lockIndex = 0;
+
+        // iterate over every key...
         for (int index = 0; index < syntax.length(); index++) {
             key = syntax.charAt(index);
             argument += key;
 
+            // do we have an opener for needed arguments?
             if (key == KEYS_MUST_ARGS.charAt(0) && !mustLocked && !optLocked) {
                 mustLocked = true;
                 lockIndex = 1;
                 continue;
             }
+
+            // do we have an quitter for needed arguments?
             if (key == KEYS_MUST_ARGS.charAt(1) && mustLocked) {
                 --lockIndex;
                 if (lockIndex == 0) {
@@ -116,6 +183,8 @@ public class SyntaxHelper {
                 }
                 continue;
             }
+
+            // do we have an opener for optional arguments?
             if (key == KEYS_OPT_ARGS.charAt(0) && !mustLocked) {
                 if (optLocked) {
                     ++lockIndex;
@@ -126,6 +195,7 @@ public class SyntaxHelper {
                 continue;
             }
 
+            // do we have an quitter for optional arguments?
             if (key == KEYS_OPT_ARGS.charAt(1) && optLocked) {
                 --lockIndex;
                 if (lockIndex == 0) {
@@ -136,8 +206,10 @@ public class SyntaxHelper {
                 continue;
             }
 
+            // do we have a keyword?
             if (key == ' ' && !optLocked && !mustLocked) {
-                argument = argument.replace(" ", "");
+                argument = argument.replaceAll("  ", "");
+                argument = argument.replaceAll(" ", "");
                 if (!argument.equalsIgnoreCase(" ") && !argument.equalsIgnoreCase("")) {
                     arguments.add(argument);
                 }
@@ -146,6 +218,7 @@ public class SyntaxHelper {
             }
         }
 
+        // add the rest of the argument to complete the list
         if (argument.length() > 0) {
             arguments.add(argument);
         }

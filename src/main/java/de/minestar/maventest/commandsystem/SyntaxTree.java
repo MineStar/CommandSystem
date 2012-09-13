@@ -96,7 +96,7 @@ public class SyntaxTree {
             // optionalArguments to Integer.MAX_VALUE
             if (argument.isOptional()) {
                 ++optionalArguments;
-                this.childTree = new SyntaxTree(SyntaxHelper.removeSyntaxKeys(singleArg));
+                this.childTree = new SyntaxTree(SyntaxHelper.removeOptionalSyntaxKeys(singleArg));
                 break;
             } else if (argument.isEndless()) {
                 endless = true;

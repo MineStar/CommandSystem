@@ -61,11 +61,15 @@ public class CommandHandler {
 
         // lookup the command
         AbstractCommand command = this.registeredCommands.get(label);
+
+        // is the command == null => command is registered by bukkit, but not in
+        // the commandhandler
         if (command == null) {
             ChatUtils.writeError(sender, pluginName, "Command '" + label + "' registered, but not found.");
             return false;
         }
 
+        // handle the command
         command.handleCommand(sender, new ArgumentList(arguments));
         return true;
     }

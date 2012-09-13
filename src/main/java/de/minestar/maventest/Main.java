@@ -18,7 +18,7 @@ public class Main {
         System.out.println("--------------------------------------------------------------");
 
         SyntaxTree argTree;
-        argTree = new SyntaxTree("<RADIUS> ] [<PlayerName> [TIME|SINCE <1H2M3S>]]");
+        argTree = new SyntaxTree("<RADIUS> [<PlayerName> [TIME|SINCE <1H2M3S>]]");
 
         String[] args;
 
