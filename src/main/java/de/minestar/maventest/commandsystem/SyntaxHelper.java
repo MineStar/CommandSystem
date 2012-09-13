@@ -52,7 +52,7 @@ public class SyntaxHelper {
                 continue;
             }
             if (key == KEYS_OPT_ARGS.charAt(1)) {
-                if (mustOpen || lastOpenIndex + 1 == index) {
+                if (mustOpen) {
                     return new SyntaxValidationResult("Needed statement is still opened!", index);
                 } else if (lastOpenIndex + 1 == index) {
                     return new SyntaxValidationResult("Optional statement is still empty!", index);
