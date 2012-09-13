@@ -6,13 +6,16 @@ import de.minestar.maventest.commandsystem.SyntaxTree;
 public class Main {
 
     public static void runTest(SyntaxTree argTree, String[] arguments) {
-        System.out.println("\n");
         boolean result = argTree.checkSyntax(new ArgumentList(arguments));
         System.out.println(new ArgumentList(arguments).toString());
-        System.out.println("valid syntax: " + result);
+        System.out.println("valid syntax: " + result + "\n");
     }
 
     public static void DoTest_1() {
+        System.out.println("--------------------------------------------------------------");
+        System.out.println("SYNTAX: " + "<RADIUS> [<PlayerName> [TIME|SINCE <1H2M3S>]]");
+        System.out.println("--------------------------------------------------------------");
+
         SyntaxTree argTree;
         argTree = new SyntaxTree("<RADIUS> [<PlayerName> [TIME|SINCE <1H2M3S>]]");
 
@@ -66,8 +69,12 @@ public class Main {
     }
 
     public static void DoTest_2() {
+        System.out.println("--------------------------------------------------------------");
+        System.out.println("SYNTAX: " + "<PlayerName> [PlayerName ...]");
+        System.out.println("--------------------------------------------------------------");
+
         SyntaxTree argTree;
-        argTree = new SyntaxTree("<PlayerName> [PlayerName ...] ");
+        argTree = new SyntaxTree("<PlayerName> [PlayerName ...]");
 
         String[] args;
 
@@ -93,8 +100,11 @@ public class Main {
     }
 
     public static void DoTest_3() {
+        System.out.println("--------------------------------------------------------------");
+        System.out.println("SYNTAX: " + "<RADIUS> [<PlayerName> [<PlayerName>]]");
+        System.out.println("--------------------------------------------------------------");
         SyntaxTree argTree;
-        argTree = new SyntaxTree("<RADIUS> [<PlayerName> [<PlayerName>]] ");
+        argTree = new SyntaxTree("<RADIUS> [<PlayerName> [<PlayerName>]]");
 
         String[] args;
 
