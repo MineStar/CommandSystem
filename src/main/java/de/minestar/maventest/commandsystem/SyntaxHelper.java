@@ -21,8 +21,11 @@ public class SyntaxHelper {
         int lastOpenIndex = -1;
 
         for (int index = 0; index < syntax.length(); index++) {
-            if (optCount < 0 || mustCount < 0) {
-                return new SyntaxValidationResult("Statement is closed, before it is opened!", index);
+            if (mustCount < 0) {
+                return new SyntaxValidationResult("Needed statement is closed, before it is opened!", index - 1);
+            }
+            if (optCount < 0) {
+                return new SyntaxValidationResult("Optional statement is closed, before it is opened!", index - 1);
             }
 
             key = syntax.charAt(index);

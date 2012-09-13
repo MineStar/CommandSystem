@@ -75,7 +75,7 @@ public class Main {
         System.out.println("--------------------------------------------------------------");
 
         SyntaxTree argTree;
-        argTree = new SyntaxTree("<PlayerName> [PlayerName ...]");
+        argTree = new SyntaxTree("<PlayerName> > [PlayerName ...]");
 
         String[] args;
 
