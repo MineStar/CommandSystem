@@ -373,7 +373,7 @@ public abstract class AbstractCommand {
     public final boolean handleCommand(CommandSender sender, ArgumentList argumentList) {
         // cast the label to lowercase
         if (argumentList.length() < 1) {
-            ChatUtils.writeError(sender, pluginName, "Too less arguments (No label found)!");
+            ChatUtils.writeError(sender, pluginName, "Too less arguments (Commandlabel not found)!");
             return false;
         }
 

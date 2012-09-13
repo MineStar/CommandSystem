@@ -7,9 +7,8 @@ public class ArgumentTree {
     private static String KEYS_OPT_ARGS = "[]";
     private static String KEYS_INF_ARG = "...";
 
-    private int minArguments, maxArguments, countOptArgs;
+    private int minArguments, countOptArgs, maxArguments;
     private boolean endless = false;
-    private final ArgumentTree parent;
     private ArgumentTree child;
     private final String syntax;
 
@@ -17,18 +16,12 @@ public class ArgumentTree {
     private ArrayList<String> singleArgs;
 
     public ArgumentTree(String syntax) {
-        this(null, syntax);
-    }
-
-    public ArgumentTree(ArgumentTree parent, String syntax) {
-        this.parent = parent;
         this.syntax = syntax;
         this.prepareSyntax();
     }
 
     private void prepareSyntax() {
         this.minArguments = 0;
-        this.maxArguments = 0;
         this.argList = new ArrayList<ArgumentType>();
         this.singleArgs = new ArrayList<String>();
         ArrayList<String> arguments = getArguments(this.syntax);
@@ -45,29 +38,29 @@ public class ArgumentTree {
             argList.add(argType);
             singleArgs.add(("|" + singleArg + "|").toLowerCase());
 
-            ++this.maxArguments;
             if (!argType.equals(ArgumentType.OPTIONAL) && !argType.equals(ArgumentType.ENDLESS) && !argType.equals(ArgumentType.NONE)) {
                 ++this.minArguments;
             }
             if (argType.equals(ArgumentType.OPTIONAL)) {
                 ++countOptArgs;
-                this.child = new ArgumentTree(this, getArgumentWithoutArg(singleArg));
+                this.child = new ArgumentTree(getArgumentWithoutArg(singleArg));
                 break;
             } else if (argType.equals(ArgumentType.ENDLESS)) {
-                this.maxArguments = Integer.MAX_VALUE;
                 endless = true;
-                countOptArgs = this.maxArguments;
+                countOptArgs = Integer.MAX_VALUE;
                 break;
             }
         }
+
+        this.maxArguments = getMaxArgumentCount();
     }
 
     public boolean validate(ArgumentList argumentList) {
-        if (argumentList.length() < this.getMinArguments() || argumentList.length() > this.getMaxArgumentCount()) {
+        if (argumentList.length() < this.getMinArguments() || argumentList.length() > this.calculateMaxArgumentCount()) {
             return endless && argumentList.length() >= this.getMinArguments();
         }
 
-        int argCount = this.getMaxArgumentCount();
+        int argCount = this.calculateMaxArgumentCount();
 
         ArgumentType type;
         String singleArg, currentArg;
@@ -78,7 +71,7 @@ public class ArgumentTree {
             currentArg = argumentList.getString(index);
             if (type.equals(ArgumentType.OPTIONAL)) {
                 if (this.child != null) {
-                    if (newLength < child.getMinArguments() || newLength > child.getMaxArgumentCount()) {
+                    if (newLength < child.getMinArguments() || newLength > child.calculateMaxArgumentCount()) {
                         return false;
                     } else {
                         return child.validate(new ArgumentList(argumentList, 1));
@@ -96,15 +89,16 @@ public class ArgumentTree {
     }
 
     public int getMinArguments() {
-        if (this.parent != null) {
-            return minArguments;
-        }
         return minArguments;
     }
 
     public int getMaxArgumentCount() {
+        return this.maxArguments;
+    }
+
+    public int calculateMaxArgumentCount() {
         if (child != null) {
-            return countOptArgs + child.getMaxArgumentCount();
+            return countOptArgs + child.calculateMaxArgumentCount();
         }
         return this.minArguments + countOptArgs;
     }
