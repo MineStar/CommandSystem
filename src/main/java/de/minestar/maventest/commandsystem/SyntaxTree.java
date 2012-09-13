@@ -19,24 +19,39 @@ public class SyntaxTree {
      * @param syntax
      */
     public SyntaxTree(String syntax) {
+
+        // replace all double spaces
         syntax = syntax.replaceAll("   ", " ");
         syntax = syntax.replaceAll("  ", " ");
+
+        // replace a possible space at the beginning
         if (syntax.startsWith(" ")) {
             syntax = syntax.substring(1, syntax.length());
         }
+
+        // replace a possible space at the end
         if (syntax.endsWith(" ")) {
             syntax = syntax.substring(0, syntax.length() - 1);
         }
 
+        // set syntax
         this.syntax = syntax;
-        this.validateSyntax();
+
+        // is the syntax valid?
+        if (this.validateSyntax()) {
+            // prepare the syntax for the later use in commands
+            this.analyzeSyntax();
+        }
     }
 
-    private void validateSyntax() {
+    /**
+     * Validate the given syntax. This method is automatically called by the
+     * constructor to validate the given syntaxstring.
+     */
+    private boolean validateSyntax() {
         SyntaxValidationResult result = SyntaxHelper.isSyntaxValid(this.syntax);
-        if (result.getErrorIndex() == -1) {
-            this.analyzeSyntax();
-        } else {
+
+        if (result.getErrorIndex() > -1) {
             String message = "\n\nSyntax '" + syntax + "' is not valid!\n";
             if (result.getErrorIndex() == Integer.MAX_VALUE) {
                 message += result.getReason();
@@ -51,6 +66,7 @@ public class SyntaxTree {
             }
             throw new RuntimeException(message);
         }
+        return true;
     }
 
     /**
