@@ -116,6 +116,14 @@ public class SyntaxTree {
         }
 
         // calculate the maximum argumentcount
+        if (this.argumentList.size() > 0) {
+            if (this.argumentList.get(0).isOptional()) {
+                if (this.childTree.argumentList.size() == 1) {
+                    this.minimumArguments = 0;
+                }
+
+            }
+        }
         this.maximumArguments = this.precalculateMaxArgumentCount();
     }
 
@@ -139,6 +147,7 @@ public class SyntaxTree {
         Argument argument;
         String currentArgument;
         int newLength = argumentList.length() - 1;
+        int minus = 1;
 
         // iterate over every argument of this SyntaxTree, BUT
         // break if we reach the end of the given ArgumenList
@@ -153,11 +162,15 @@ public class SyntaxTree {
             // if the argument is optional:
             // check the new length OR let the child check the syntax
             if (argument.isOptional()) {
+                if (index == 0) {
+                    newLength++;
+                    minus = 0;
+                }
                 if (this.childTree != null) {
                     if (newLength < childTree.minimumArguments || newLength > childTree.maximumArguments) {
                         return false;
                     } else {
-                        return childTree.checkSyntax(new ArgumentList(argumentList, 1));
+                        return childTree.checkSyntax(new ArgumentList(argumentList, minus));
                     }
                 }
             } else {
@@ -171,7 +184,6 @@ public class SyntaxTree {
         }
         return true;
     }
-
     /**
      * This method is used to precalculate the maximum argumentcount on the
      * creation of this SyntaxTree. It is automatically called.
@@ -182,6 +194,10 @@ public class SyntaxTree {
         if (childTree != null) {
             return optionalArguments + childTree.precalculateMaxArgumentCount();
         }
-        return this.minimumArguments + optionalArguments;
+        if (this.argumentList.size() > 0 && this.argumentList.get(0).isOptional()) {
+            return this.minimumArguments;
+        } else {
+            return this.minimumArguments + optionalArguments;
+        }
     }
 }

@@ -102,10 +102,10 @@ public class Main {
 
     public static void DoTest_3() {
         System.out.println("--------------------------------------------------------------");
-        System.out.println("SYNTAX: " + "<RADIUS> [<PlayerName> [<PlayerName>]]");
+        System.out.println("SYNTAX: " + "[<PlayerName>]");
         System.out.println("--------------------------------------------------------------");
         SyntaxTree argTree;
-        argTree = new SyntaxTree("<RADIUS> [<PlayerName> [<PlayerName>]]");
+        argTree = new SyntaxTree("[<PlayerName>]");
 
         String[] args;
 
@@ -113,18 +113,18 @@ public class Main {
         runTest(argTree, args);
         //
         args = new String[1];
-        args[0] = "20";
+        args[0] = "gemoschen";
         runTest(argTree, args);
 
         //
         args = new String[2];
-        args[0] = "20";
+        args[0] = "mel";
         args[1] = "GeMoschen";
         runTest(argTree, args);
 
         //
         args = new String[3];
-        args[0] = "20";
+        args[0] = "mel";
         args[1] = "GeMoschen";
         args[2] = "leif";
         runTest(argTree, args);
@@ -137,12 +137,48 @@ public class Main {
         runTest(argTree, args);
     }
 
+    public static void DoTest_4() {
+        System.out.println("--------------------------------------------------------------");
+        System.out.println("SYNTAX: " + "<Player> [key]");
+        System.out.println("--------------------------------------------------------------");
+        SyntaxTree argTree;
+        argTree = new SyntaxTree("<Player> [key]");
+
+        String[] args;
+
+        args = new String[0];
+        runTest(argTree, args);
+        //
+        args = new String[1];
+        args[0] = "gemoschen";
+        runTest(argTree, args);
+
+        //
+        args = new String[2];
+        args[0] = "mel";
+        args[1] = "key";
+        runTest(argTree, args);
+
+        //
+        args = new String[3];
+        args[0] = "mel";
+        args[1] = "GeMoschen";
+        runTest(argTree, args);
+
+        args = new String[4];
+        args[0] = "20";
+        args[1] = "GeMoschen";
+        args[2] = "leif";
+        runTest(argTree, args);
+    }
+
     /**
      * @param args
      */
     public static void main(String[] arguments) {
-        DoTest_1();
-        DoTest_2();
+//        DoTest_1();
+//        DoTest_2();
         DoTest_3();
+        DoTest_4();
     }
 }

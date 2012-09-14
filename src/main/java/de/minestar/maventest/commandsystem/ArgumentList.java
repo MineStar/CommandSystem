@@ -35,6 +35,9 @@ public class ArgumentList {
         ArrayList<Object> newArgs = new ArrayList<Object>(args.length);
         for (Object object : args) {
             // FILTER EMPTY STRINGS
+            if (object == null)
+                continue;
+
             if (!object.toString().isEmpty())
                 newArgs.add(object);
         }
@@ -274,7 +277,10 @@ public class ArgumentList {
      * @return
      */
     public String getString(int index) {
-        return args[index + offset].toString();
+        if (index + offset >= 0 && index + offset < args.length) {
+            return args[index + offset].toString();
+        }
+        return null;
     }
 
     // START GENERIC SHIT
