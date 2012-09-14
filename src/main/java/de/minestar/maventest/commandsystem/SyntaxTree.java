@@ -19,11 +19,20 @@ public class SyntaxTree {
      * @param syntax
      */
     public SyntaxTree(String syntax) {
+        this(syntax, true);
+    }
+
+    /**
+     * Constructor
+     * 
+     * @param syntax
+     */
+    private SyntaxTree(String syntax, boolean doValidation) {
         // set syntax
         this.syntax = syntax;
 
         // is the syntax valid?
-        if (this.validateSyntax()) {
+        if (!doValidation || this.validateSyntax()) {
             // prepare the syntax for the later use in commands
             this.analyzeSyntax();
         }
@@ -97,7 +106,7 @@ public class SyntaxTree {
             // optionalArguments to Integer.MAX_VALUE
             if (argument.isOptional()) {
                 ++optionalArguments;
-                this.childTree = new SyntaxTree(SyntaxHelper.removeOptionalSyntaxKeys(singleArg));
+                this.childTree = new SyntaxTree(SyntaxHelper.removeOptionalSyntaxKeys(singleArg), false);
                 break;
             } else if (argument.isEndless()) {
                 endless = true;

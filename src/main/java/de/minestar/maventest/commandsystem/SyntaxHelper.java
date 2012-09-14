@@ -60,9 +60,8 @@ public class SyntaxHelper {
                     return new SyntaxValidationResult("Spaces in needed statements are not allowed!", index);
                 }
             }
-
             // is the char an opener for a needed arguments?
-            if (key == KEYS_MUST_ARGS.charAt(0)) {
+            else if (key == KEYS_MUST_ARGS.charAt(0)) {
                 // we cannot nest needed arguments into needed arguments
                 if (neededArgumentOpen) {
                     return new SyntaxValidationResult("Needed statement is already opened!", index);
@@ -104,6 +103,11 @@ public class SyntaxHelper {
                 if (lastOpenIndex + 1 == index) {
                     return new SyntaxValidationResult("Optional statement is empty!", index);
                 }
+
+                // spaces in front of an optional quitter are not allowed
+                if (lastKey == ' ') {
+                    return new SyntaxValidationResult("Optional arguments must NOT end with spaces!", index - 1);
+                }
                 --optionalArgumentCount;
                 optionalArgumentClosed = true;
             }
@@ -116,7 +120,7 @@ public class SyntaxHelper {
                 return new SyntaxValidationResult("Optional statement is closed, before it is opened!", index);
             }
 
-            lastKey = key;
+            lastKey = syntax.charAt(index);
             lastOpenIndex = -1;
         }
 
