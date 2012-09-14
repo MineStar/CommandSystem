@@ -35,9 +35,6 @@ public class ArgumentList {
         ArrayList<Object> newArgs = new ArrayList<Object>(args.length);
         for (Object object : args) {
             // FILTER EMPTY STRINGS
-            if (object == null)
-                continue;
-
             if (!object.toString().isEmpty())
                 newArgs.add(object);
         }

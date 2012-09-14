@@ -160,12 +160,12 @@ public class Main {
         runTest(argTree, args);
 
         //
-        args = new String[3];
+        args = new String[2];
         args[0] = "mel";
         args[1] = "GeMoschen";
         runTest(argTree, args);
 
-        args = new String[4];
+        args = new String[3];
         args[0] = "20";
         args[1] = "GeMoschen";
         args[2] = "leif";
@@ -179,6 +179,6 @@ public class Main {
 //        DoTest_1();
 //        DoTest_2();
         DoTest_3();
-        DoTest_4();
+//        DoTest_4();
     }
 }
