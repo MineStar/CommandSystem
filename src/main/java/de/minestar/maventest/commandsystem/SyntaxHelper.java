@@ -26,27 +26,39 @@ public class SyntaxHelper {
         int neededArgumentCount = 0, optionalArgumentCount = 0;
         boolean neededArgumentOpen = false;
         boolean optionalArgumentClosed = false;
-        char key;
+        char key, lastKey = ' ';
         int lastOpenIndex = -1;
 
         // iterate over every char...
         for (int index = 0; index < syntax.length(); index++) {
-            // is neededArgumentCount OR optionalArgumentCount < 0 => return
-            // with errormessage,
-            // this means that there is a close-statement without an
-            // opening-statement in front of it
-            if (neededArgumentCount < 0) {
-                return new SyntaxValidationResult("Needed statement is closed, before it is opened!", index - 1);
-            }
-            if (optionalArgumentCount < 0) {
-                return new SyntaxValidationResult("Optional statement is closed, before it is opened!", index - 1);
-            }
 
             // get the current char
             key = syntax.charAt(index);
 
+            // after closing an optional argument, only other closearguments for
+            // optional arguments are allowed
             if (key != ' ' && key != ']' && optionalArgumentClosed) {
                 return new SyntaxValidationResult("No statements after optional argument allowed!", index);
+            }
+
+            // check for: doublespaces, spaces at the beginning, spaces in
+            // needed arguments
+            if (key == ' ') {
+                // doublespace or space at the beginning?
+                if (lastKey == ' ') {
+                    // space at the beginning
+                    if (index == 0) {
+                        return new SyntaxValidationResult("Spaces at the beginning are not allowed!", index);
+                    }
+                    // doublespace
+                    else {
+                        return new SyntaxValidationResult("Doublespaces are not allowed!", index - 1);
+                    }
+                }
+                // spaces in needed argument
+                if (neededArgumentOpen) {
+                    return new SyntaxValidationResult("Spaces in needed statements are not allowed!", index);
+                }
             }
 
             // is the char an opener for a needed arguments?
@@ -58,33 +70,31 @@ public class SyntaxHelper {
                 ++neededArgumentCount;
                 neededArgumentOpen = true;
                 lastOpenIndex = index;
-                continue;
             }
-
             // is the char an quitter for a needed arguments?
-            if (key == KEYS_MUST_ARGS.charAt(1)) {
+            else if (key == KEYS_MUST_ARGS.charAt(1)) {
                 --neededArgumentCount;
-                neededArgumentOpen = false;
                 // is the argument at least 1 char long?
                 if (lastOpenIndex + 1 == index) {
-                    return new SyntaxValidationResult("Needed statement is empty!", index);
+                    if (neededArgumentOpen) {
+                        return new SyntaxValidationResult("Needed statement is empty!", index);
+                    } else {
+                        return new SyntaxValidationResult("Needed statement is closed, before it is opened!", index);
+                    }
                 }
-                continue;
+                neededArgumentOpen = false;
             }
-
             // is the char an opener for an optional arguments?
-            if (key == KEYS_OPT_ARGS.charAt(0)) {
+            else if (key == KEYS_OPT_ARGS.charAt(0)) {
                 // we cannot nest optional arguments into needed arguments
                 if (neededArgumentOpen) {
                     return new SyntaxValidationResult("Needed statement is still opened!", index);
                 }
                 ++optionalArgumentCount;
                 lastOpenIndex = index;
-                continue;
             }
-
             // is the char an quitter for an optional arguments?
-            if (key == KEYS_OPT_ARGS.charAt(1)) {
+            else if (key == KEYS_OPT_ARGS.charAt(1)) {
                 // needed statements must be closed first, otherwise constructs
                 // like [<] would be possible
                 if (neededArgumentOpen) {
@@ -92,21 +102,35 @@ public class SyntaxHelper {
                 }
                 // is the argument at least 1 char long?
                 if (lastOpenIndex + 1 == index) {
-                    return new SyntaxValidationResult("Optional statement is still empty!", index);
+                    return new SyntaxValidationResult("Optional statement is empty!", index);
                 }
                 --optionalArgumentCount;
                 optionalArgumentClosed = true;
-                continue;
             }
+
+            // is optionalArgumentCount < 0 => return
+            // with errormessage,
+            // this means that there is a close-statement without an
+            // opening-statement in front of it
+            if (optionalArgumentCount < 0) {
+                return new SyntaxValidationResult("Optional statement is closed, before it is opened!", index);
+            }
+
+            lastKey = key;
             lastOpenIndex = -1;
         }
+
+        // space at the end
+        if (lastKey == ' ') {
+            return new SyntaxValidationResult("Spaces at the end are not allowed!", syntax.length() - 1);
+        }
+
         // are all statements closed correct?
         if (optionalArgumentCount != 0 || neededArgumentCount != 0) {
             return new SyntaxValidationResult("Statements are not closed properly!", Integer.MAX_VALUE);
         }
         return new SyntaxValidationResult("OK", -1);
     }
-
     /**
      * Remove the optional syntaxkeys from a given String
      * 

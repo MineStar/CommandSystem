@@ -19,21 +19,6 @@ public class SyntaxTree {
      * @param syntax
      */
     public SyntaxTree(String syntax) {
-
-        // replace all double spaces
-        syntax = syntax.replaceAll("   ", " ");
-        syntax = syntax.replaceAll("  ", " ");
-
-        // replace a possible space at the beginning
-        if (syntax.startsWith(" ")) {
-            syntax = syntax.substring(1, syntax.length());
-        }
-
-        // replace a possible space at the end
-        if (syntax.endsWith(" ")) {
-            syntax = syntax.substring(0, syntax.length() - 1);
-        }
-
         // set syntax
         this.syntax = syntax;
 
