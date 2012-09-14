@@ -25,6 +25,7 @@ public class SyntaxHelper {
         // create some vars...
         int neededArgumentCount = 0, optionalArgumentCount = 0;
         boolean neededArgumentOpen = false;
+        boolean optionalArgumentClosed = false;
         char key;
         int lastOpenIndex = -1;
 
@@ -43,6 +44,10 @@ public class SyntaxHelper {
 
             // get the current char
             key = syntax.charAt(index);
+
+            if (key != ' ' && key != ']' && optionalArgumentClosed) {
+                return new SyntaxValidationResult("No statements after optional argument allowed!", index);
+            }
 
             // is the char an opener for a needed arguments?
             if (key == KEYS_MUST_ARGS.charAt(0)) {
@@ -90,6 +95,7 @@ public class SyntaxHelper {
                     return new SyntaxValidationResult("Optional statement is still empty!", index);
                 }
                 --optionalArgumentCount;
+                optionalArgumentClosed = true;
                 continue;
             }
             lastOpenIndex = -1;
